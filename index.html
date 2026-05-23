@@ -9,10 +9,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
 :root{
-  --navy:#1B3A6B;--navy2:#22437a;--navy-light:#2e5fa3;--navy-dark:#0a1628;
+  --navy:#1B3A6B;--navy-light:#2e5fa3;--navy-dark:#0a1628;
   --red:#C0392B;--gold:#d4a843;--gold2:#f0d070;
-  --white:#fff;--off:#f4f6fb;--g100:#edf0f7;--g200:#d8dde9;
-  --g400:#8e99b5;--g600:#4f5e82;--g800:#1e2740;
+  --off:#f4f6fb;--g100:#edf0f7;--g200:#d8dde9;--g400:#8e99b5;--g600:#4f5e82;--g800:#1e2740;
   --success:#1a9a6a;--sbg:#e6f7ef;
   --font:'DM Sans',sans-serif;--syne:'Syne',sans-serif;--mono:'DM Mono',monospace;
   --r:14px;--rsm:10px;
@@ -20,9 +19,9 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body{font-family:var(--font);background:var(--off);color:var(--g800);min-height:100vh;overflow-x:hidden}
 
+/* SETUP */
 #screen-setup{display:none;min-height:100vh;flex-direction:column;background:var(--navy-dark)}
 #screen-setup.active{display:flex}
-
 .hero{position:relative;flex:0 0 auto;height:300px;overflow:hidden;background:linear-gradient(180deg,#0a1628 0%,#0f1f3d 60%,#1B3A6B 100%)}
 .stars{position:absolute;inset:0;overflow:hidden}
 .star{position:absolute;border-radius:50%;background:white;animation:twinkle var(--dur,3s) ease-in-out infinite var(--del,0s)}
@@ -34,19 +33,18 @@ body{font-family:var(--font);background:var(--off);color:var(--g800);min-height:
 .watch-face{position:absolute;inset:8px;border-radius:50%;background:radial-gradient(ellipse at 30% 25%,#1e3060 0%,#0d1c38 70%);border:1px solid rgba(212,168,67,.25)}
 .watch-logo{position:absolute;top:28%;left:50%;transform:translateX(-50%);font-family:var(--syne);font-size:7px;font-weight:700;color:rgba(212,168,67,.7);letter-spacing:.2em;text-transform:uppercase;white-space:nowrap}
 .watch-canvas{position:absolute;inset:8px;border-radius:50%}
-.watch-crown{position:absolute;right:-6px;top:50%;transform:translateY(-50%);width:8px;height:18px;background:linear-gradient(180deg,#3a5080,#1a2d52);border-radius:3px;border:1px solid rgba(212,168,67,.2)}
-.hero-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--red);animation:pulse 1.5s ease-in-out infinite}
-@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.4);opacity:.7}}
+.watch-crown{position:absolute;right:-6px;top:50%;transform:translateY(-50%);width:8px;height:18px;background:linear-gradient(180deg,#3a5080,#1a2d52);border-radius:3px}
 .hero-text{position:absolute;top:160px;left:0;right:0;text-align:center;padding:0 20px}
 .hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(212,168,67,.12);border:1px solid rgba(212,168,67,.3);border-radius:20px;padding:4px 12px;margin-bottom:10px}
+.hero-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--red);animation:pulse 1.5s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.4)}}
 .hero-badge-text{font-size:10px;font-weight:600;color:rgba(212,168,67,.9);letter-spacing:.1em;text-transform:uppercase}
 .hero-title{font-family:var(--syne);font-size:24px;font-weight:800;color:white;line-height:1.2}
 .hero-title span{color:var(--gold2)}
 .hero-sub{font-size:12px;color:rgba(255,255,255,.4);margin-top:4px}
-
 .setup-card{position:relative;z-index:2;background:white;border-radius:24px 24px 0 0;padding:28px 22px 44px;flex:1;box-shadow:0 -12px 40px rgba(0,0,0,.3)}
 .setup-card::before{content:'';display:block;width:36px;height:4px;background:var(--g200);border-radius:2px;margin:0 auto 22px}
-.setup-section-title{font-family:var(--syne);font-size:13px;font-weight:700;color:var(--navy);margin-bottom:16px;letter-spacing:.02em}
+.setup-section-title{font-family:var(--syne);font-size:13px;font-weight:700;color:var(--navy);margin-bottom:16px}
 .field{margin-bottom:14px}
 .field label{display:block;font-size:10px;font-weight:600;color:var(--g400);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
 .field input{width:100%;padding:13px 14px;border:1.5px solid var(--g200);border-radius:var(--rsm);font-family:var(--font);font-size:15px;color:var(--g800);background:var(--off);outline:none;transition:border-color .15s;-webkit-appearance:none}
@@ -56,39 +54,45 @@ body{font-family:var(--font);background:var(--off);color:var(--g800);min-height:
 .site-btn .site-icon{font-size:18px;display:block;margin-bottom:3px}
 .site-btn.selected{border-color:var(--navy);background:#eef2fa;color:var(--navy);font-weight:700}
 .site-btn:active{transform:scale(.97)}
-.btn-primary{width:100%;padding:16px;background:linear-gradient(135deg,var(--navy) 0%,var(--navy-light) 100%);color:white;border:none;border-radius:var(--rsm);font-family:var(--syne);font-size:15px;font-weight:700;cursor:pointer;margin-top:10px;letter-spacing:.02em;transition:opacity .15s;display:flex;align-items:center;justify-content:center;gap:8px;position:relative;overflow:hidden}
+.btn-primary{width:100%;padding:16px;background:linear-gradient(135deg,var(--navy) 0%,var(--navy-light) 100%);color:white;border:none;border-radius:var(--rsm);font-family:var(--syne);font-size:15px;font-weight:700;cursor:pointer;margin-top:10px;display:flex;align-items:center;justify-content:center;gap:8px;position:relative;overflow:hidden}
 .btn-primary::after{content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);animation:shimmer 2.5s ease-in-out infinite}
 @keyframes shimmer{0%{left:-100%}100%{left:200%}}
 .btn-primary:active{opacity:.9}
 .btn-primary:disabled{background:var(--g200);color:var(--g400);cursor:not-allowed;background-image:none}
 .btn-primary:disabled::after{display:none}
 
-#screen-main{display:none}
+/* MAIN APP */
+#screen-main{display:none;padding-bottom:60px}
 #screen-main.active{display:block}
 .app-header{background:var(--navy-dark);padding:0 16px;position:sticky;top:0;z-index:100}
 .header-top{display:flex;align-items:center;justify-content:space-between;padding:12px 0 8px;border-bottom:1px solid rgba(255,255,255,.07)}
 .h-brand{display:flex;align-items:center;gap:8px}
 .h-dot{width:7px;height:7px;border-radius:50%;background:var(--red);box-shadow:0 0 8px var(--red)}
-.h-title{font-family:var(--syne);font-size:13px;font-weight:700;color:white;letter-spacing:.02em;line-height:1.2}
-.h-sub{font-size:10px;color:rgba(212,168,67,.7);font-weight:500;letter-spacing:.04em}
+.h-title{font-family:var(--syne);font-size:13px;font-weight:700;color:white}
+.h-sub{font-size:10px;color:rgba(212,168,67,.7);font-weight:500}
 .header-meta{display:flex;align-items:center;justify-content:space-between;padding:7px 0 9px;gap:8px}
 .meta-chips{display:flex;align-items:center;gap:5px;flex:1;overflow:hidden}
 .chip{display:inline-flex;align-items:center;gap:4px;padding:4px 9px;border-radius:20px;font-size:10px;font-weight:600;white-space:nowrap}
 .chip-site{background:var(--red);color:white}
 .chip-user{background:rgba(255,255,255,.09);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1)}
-.btn-export{background:rgba(212,168,67,.12);border:1px solid rgba(212,168,67,.3);color:rgba(212,168,67,.9);border-radius:var(--rsm);padding:7px 11px;font-family:var(--font);font-size:11px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;transition:background .15s;flex-shrink:0}
+.btn-export{background:rgba(212,168,67,.12);border:1px solid rgba(212,168,67,.3);color:rgba(212,168,67,.9);border-radius:var(--rsm);padding:7px 11px;font-family:var(--font);font-size:11px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;flex-shrink:0}
 .btn-export:active{background:rgba(212,168,67,.22)}
 
 .date-nav-bar{display:flex;align-items:center;justify-content:space-between;background:white;padding:9px 14px;border-bottom:1px solid var(--g100)}
 .date-arrows{display:flex;align-items:center;gap:2px}
-.darrow{width:32px;height:32px;border:none;background:none;border-radius:8px;font-size:20px;color:var(--navy);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .12s}
+.darrow{width:32px;height:32px;border:none;background:none;border-radius:8px;font-size:20px;color:var(--navy);cursor:pointer;display:flex;align-items:center;justify-content:center}
 .darrow:active{background:var(--g100)}
 .date-center{flex:1;text-align:center}
 .date-main{font-family:var(--syne);font-size:13px;font-weight:700;color:var(--navy)}
 .date-sub{font-size:11px;color:var(--g400);margin-top:1px}
 .today-pill{font-size:11px;font-weight:600;color:var(--navy);background:var(--g100);border:none;border-radius:20px;padding:5px 11px;cursor:pointer;font-family:var(--font)}
 
-.main-content{padding:12px 13px 100px;max-width:520px;margin:0 auto}
+/* TABS */
+.tab-content{padding:12px 13px 0;max-width:520px;margin:0 auto}
+.tab-pane{display:none}
+.tab-pane.active{display:block}
+
+/* STATS */
 .stats-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px}
 .stat-card{background:white;border-radius:var(--r);padding:11px 8px;box-shadow:0 1px 6px rgba(27,58,107,.07);text-align:center;border-bottom:2px solid transparent}
 .stat-card.s-all{border-bottom-color:var(--navy)}
@@ -101,13 +105,16 @@ body{font-family:var(--font);background:var(--off);color:var(--g800);min-height:
 
 .search-wrap{position:relative;margin-bottom:10px}
 .search-wrap svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--g400);pointer-events:none}
-.search-input{width:100%;padding:11px 14px 11px 38px;border:1.5px solid var(--g200);border-radius:var(--r);font-family:var(--font);font-size:15px;background:white;box-shadow:0 1px 6px rgba(27,58,107,.06);outline:none;transition:border-color .15s;color:var(--g800)}
+.search-input{width:100%;padding:11px 14px 11px 38px;border:1.5px solid var(--g200);border-radius:var(--r);font-family:var(--font);font-size:15px;background:white;box-shadow:0 1px 6px rgba(27,58,107,.06);outline:none;color:var(--g800)}
 .search-input:focus{border-color:var(--navy)}
 .search-input::placeholder{color:var(--g400)}
 
+/* DRIVER CARDS */
 .driver-card{background:white;border-radius:var(--r);box-shadow:0 1px 6px rgba(27,58,107,.06);margin-bottom:7px;overflow:hidden;border-left:3px solid transparent;transition:border-color .15s}
 .driver-card.has-data{border-left-color:var(--navy)}
 .driver-card.complete{border-left-color:var(--success)}
+.driver-card.alert-amp{border-left-color:var(--red)}
+.driver-card.alert-repos{border-left-color:#e67e22}
 .driver-header{padding:12px 13px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;-webkit-user-select:none}
 .driver-header:active{background:var(--off)}
 .driver-left{display:flex;align-items:center;gap:10px}
@@ -119,6 +126,7 @@ body{font-family:var(--font);background:var(--off);color:var(--g800);min-height:
 .driver-right{display:flex;align-items:center;gap:5px}
 .time-badge{font-family:var(--mono);font-size:10px;font-weight:500;padding:3px 6px;border-radius:5px;background:var(--g100);color:var(--g600)}
 .time-badge.done{background:var(--sbg);color:var(--success)}
+.alert-icons{display:flex;gap:2px;font-size:12px}
 .chevron{font-size:12px;color:var(--g400);transition:transform .2s;margin-left:2px}
 .driver-card.open .chevron{transform:rotate(180deg)}
 
@@ -134,27 +142,59 @@ body{font-family:var(--font);background:var(--off);color:var(--g800);min-height:
 .fg input{width:100%;padding:10px 11px;border:1.5px solid var(--g200);border-radius:var(--rsm);font-family:var(--font);font-size:15px;background:white;outline:none;transition:border-color .15s;color:var(--g800);-webkit-appearance:none}
 .fg input:focus{border-color:var(--navy);box-shadow:0 0 0 3px rgba(27,58,107,.08)}
 .fg input[type=time]{font-family:var(--mono);font-size:16px}
-
 .photo-row{margin-top:7px;margin-bottom:3px}
 .btn-photo{width:100%;padding:9px;border:1.5px dashed var(--g200);border-radius:var(--rsm);background:white;font-family:var(--font);font-size:12px;color:var(--g600);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .15s}
-.btn-photo:active{background:var(--off)}
 .btn-photo.has-photo{border-style:solid;border-color:var(--success);color:var(--success);background:var(--sbg)}
 .photo-preview{width:100%;border-radius:var(--rsm);margin-top:6px;max-height:140px;object-fit:cover;display:none}
 .photo-preview.visible{display:block}
 input[type=file]{display:none}
-
-.btn-save{width:100%;padding:11px;background:var(--navy);color:white;border:none;border-radius:var(--rsm);font-family:var(--syne);font-size:12px;font-weight:700;cursor:pointer;margin-top:9px;letter-spacing:.02em;transition:background .15s;display:flex;align-items:center;justify-content:center;gap:5px}
+.btn-save{width:100%;padding:11px;background:var(--navy);color:white;border:none;border-radius:var(--rsm);font-family:var(--syne);font-size:12px;font-weight:700;cursor:pointer;margin-top:9px;display:flex;align-items:center;justify-content:center;gap:5px}
 .btn-save:active{background:var(--navy-dark)}
 .btn-save.saved{background:var(--success)}
 .no-results{text-align:center;padding:40px 20px;color:var(--g400);font-size:14px}
 
-.bottom-bar{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid var(--g200);padding:9px 14px 22px;display:flex;gap:7px;align-items:center;box-shadow:0 -4px 20px rgba(27,58,107,.08)}
-.btn-sm{padding:8px 12px;border:1.5px solid var(--g200);border-radius:var(--rsm);background:white;font-family:var(--font);font-size:11px;font-weight:500;color:var(--g600);cursor:pointer;transition:all .12s;white-space:nowrap}
-.btn-sm:active{background:var(--g100)}
+/* DASHBOARD */
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.kpi-card{background:white;border-radius:var(--r);padding:14px;box-shadow:0 1px 6px rgba(27,58,107,.07);border-left:3px solid transparent}
+.kpi-card.k-blue{border-left-color:var(--navy)}
+.kpi-card.k-green{border-left-color:var(--success)}
+.kpi-card.k-red{border-left-color:var(--red)}
+.kpi-card.k-amber{border-left-color:#e67e22}
+.kpi-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.kpi-num{font-family:var(--syne);font-size:24px;font-weight:800;color:var(--navy);line-height:1}
+.kpi-card.k-green .kpi-num{color:var(--success)}
+.kpi-card.k-red .kpi-num{color:var(--red)}
+.kpi-card.k-amber .kpi-num{color:#e67e22}
+.kpi-label{font-size:10px;color:var(--g400);font-weight:600;letter-spacing:.05em;text-transform:uppercase}
+.kpi-bar-bg{height:4px;background:var(--g100);border-radius:2px;overflow:hidden;margin-top:8px}
+.kpi-bar-fill{height:100%;border-radius:2px;transition:width .5s ease}
+.k-green .kpi-bar-fill{background:var(--success)}
+.k-blue .kpi-bar-fill{background:var(--navy)}
+.dash-section{font-family:var(--syne);font-size:11px;font-weight:700;color:var(--g400);letter-spacing:.08em;text-transform:uppercase;margin:16px 0 8px;display:flex;align-items:center;gap:6px}
+.dash-section::after{content:'';flex:1;height:1px;background:var(--g200)}
+.alert-card{background:white;border-radius:var(--r);padding:11px 13px;box-shadow:0 1px 6px rgba(27,58,107,.06);margin-bottom:6px;display:flex;align-items:center;gap:10px;border-left:3px solid transparent}
+.alert-card.a-red{border-left-color:var(--red)}
+.alert-card.a-amber{border-left-color:#e67e22}
+.alert-icon{font-size:18px;flex-shrink:0}
+.alert-name{font-size:13px;font-weight:600;color:var(--g800)}
+.alert-detail{font-size:11px;color:var(--g400);margin-top:1px}
+.alert-badge{margin-left:auto;font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;white-space:nowrap;flex-shrink:0}
+.a-red .alert-badge{background:#fdecea;color:var(--red)}
+.a-amber .alert-badge{background:#fff3e0;color:#e67e22}
+.dash-empty{text-align:center;padding:16px;color:var(--g400);font-size:13px;background:white;border-radius:var(--r);box-shadow:0 1px 6px rgba(27,58,107,.06)}
 
+/* TAB BAR */
+.tab-bar{position:fixed;bottom:0;left:0;right:0;background:var(--navy-dark);display:flex;border-top:1px solid rgba(255,255,255,.08);z-index:100}
+.tab-btn{flex:1;padding:9px 0 13px;border:none;background:none;font-family:var(--font);font-size:10px;font-weight:600;color:rgba(255,255,255,.4);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;letter-spacing:.03em}
+.tab-btn svg{opacity:.5}
+.tab-btn.active{color:white}
+.tab-btn.active svg{opacity:1}
+.tab-indicator{width:20px;height:2px;border-radius:2px;background:transparent;margin-top:1px}
+.tab-btn.active .tab-indicator{background:var(--red)}
+
+/* MODALS */
 .toast{position:fixed;bottom:78px;left:50%;transform:translateX(-50%) translateY(14px);background:var(--g800);color:white;padding:9px 18px;border-radius:20px;font-size:12px;font-weight:500;opacity:0;transition:all .22s;z-index:500;white-space:nowrap;pointer-events:none}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:400;align-items:flex-end;justify-content:center}
 .modal-overlay.open{display:flex;animation:fadeBg .2s ease}
 @keyframes fadeBg{from{background:rgba(0,0,0,0)}}
@@ -168,66 +208,17 @@ input[type=file]{display:none}
 .modal-cancel{display:block;width:100%;padding:12px;border:none;background:var(--g100);border-radius:var(--rsm);font-family:var(--font);font-size:13px;font-weight:500;color:var(--g600);cursor:pointer;margin-top:4px}
 .modal-input{width:100%;padding:13px 14px;border:1.5px solid var(--g200);border-radius:var(--rsm);font-family:var(--font);font-size:15px;color:var(--g800);background:var(--off);outline:none;-webkit-appearance:none;margin-bottom:12px}
 .modal-input:focus{border-color:var(--navy);box-shadow:0 0 0 3px rgba(27,58,107,.1);background:white}
-.btn-modal-primary{width:100%;padding:13px;background:var(--navy);color:white;border:none;border-radius:var(--rsm);font-family:var(--syne);font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.02em}
-
-/* ══ DASHBOARD ══ */
-.tab-bar{display:flex;background:var(--navy-dark);border-top:1px solid rgba(255,255,255,.08)}
-.tab-btn{flex:1;padding:10px 0 14px;border:none;background:none;font-family:var(--font);font-size:11px;font-weight:600;color:rgba(255,255,255,.4);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;transition:color .15s;letter-spacing:.03em}
-.tab-btn svg{opacity:.5;transition:opacity .15s}
-.tab-btn.active{color:white}
-.tab-btn.active svg{opacity:1}
-.tab-btn.active .tab-indicator{background:var(--red)}
-.tab-indicator{width:20px;height:2px;border-radius:2px;background:transparent;margin-top:2px;transition:background .15s}
-
-#screen-dashboard{display:none;padding:12px 13px 100px;max-width:520px;margin:0 auto}
-#screen-dashboard.active{display:block}
-
-.dash-header{font-family:var(--syne);font-size:16px;font-weight:700;color:var(--navy);margin-bottom:14px}
-.dash-date{font-size:11px;color:var(--g400);font-weight:400;margin-left:6px}
-
-.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
-.kpi-card{background:white;border-radius:var(--r);padding:14px;box-shadow:0 1px 6px rgba(27,58,107,.07);border-left:3px solid transparent}
-.kpi-card.k-blue{border-left-color:var(--navy)}
-.kpi-card.k-green{border-left-color:var(--success)}
-.kpi-card.k-red{border-left-color:var(--red)}
-.kpi-card.k-amber{border-left-color:#e67e22}
-.kpi-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
-.kpi-num{font-family:var(--syne);font-size:26px;font-weight:800;color:var(--navy);line-height:1}
-.kpi-card.k-green .kpi-num{color:var(--success)}
-.kpi-card.k-red .kpi-num{color:var(--red)}
-.kpi-card.k-amber .kpi-num{color:#e67e22}
-.kpi-label{font-size:10px;color:var(--g400);font-weight:600;letter-spacing:.05em;text-transform:uppercase}
-.kpi-bar-bg{height:4px;background:var(--g100);border-radius:2px;overflow:hidden}
-.kpi-bar-fill{height:100%;border-radius:2px;transition:width .5s ease}
-.k-blue .kpi-bar-fill{background:var(--navy)}
-.k-green .kpi-bar-fill{background:var(--success)}
-
-.dash-section{font-family:var(--syne);font-size:11px;font-weight:700;color:var(--g400);letter-spacing:.08em;text-transform:uppercase;margin:16px 0 8px;display:flex;align-items:center;gap:6px}
-.dash-section::after{content:'';flex:1;height:1px;background:var(--g200)}
-
-.alert-card{background:white;border-radius:var(--r);padding:11px 13px;box-shadow:0 1px 6px rgba(27,58,107,.06);margin-bottom:6px;display:flex;align-items:center;gap:10px;border-left:3px solid transparent}
-.alert-card.a-red{border-left-color:var(--red)}
-.alert-card.a-amber{border-left-color:#e67e22}
-.alert-icon{font-size:18px;flex-shrink:0}
-.alert-name{font-size:13px;font-weight:600;color:var(--g800)}
-.alert-detail{font-size:11px;color:var(--g400);margin-top:1px}
-.alert-badge{margin-left:auto;font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;white-space:nowrap}
-.a-red .alert-badge{background:#fdecea;color:var(--red)}
-.a-amber .alert-badge{background:#fff3e0;color:#e67e22}
-
-.dash-empty{text-align:center;padding:20px;color:var(--g400);font-size:13px;background:white;border-radius:var(--r);box-shadow:0 1px 6px rgba(27,58,107,.06)}
-
-/* Alert icons on driver cards */
-.driver-alerts{display:flex;gap:3px;margin-left:4px}
+.btn-modal-primary{width:100%;padding:13px;background:var(--navy);color:white;border:none;border-radius:var(--rsm);font-family:var(--syne);font-size:14px;font-weight:700;cursor:pointer}
 </style>
 </head>
 <body>
 
+<!-- SETUP -->
 <div id="screen-setup" class="screen">
   <div class="hero">
     <div class="stars" id="stars"></div>
     <div class="road-wrap">
-      <svg class="road-svg" viewBox="0 0 375 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <svg class="road-svg" viewBox="0 0 375 120" preserveAspectRatio="none">
         <path d="M0 60 L375 60 L375 120 L0 120 Z" fill="#0d1a2e"/>
         <rect x="183" y="65" width="9" height="6" rx="1" fill="rgba(255,255,255,0.15)"/>
         <rect x="179" y="76" width="17" height="7" rx="1" fill="rgba(255,255,255,0.12)"/>
@@ -235,9 +226,9 @@ input[type=file]{display:none}
         <rect x="168" y="108" width="39" height="9" rx="1" fill="rgba(255,255,255,0.06)"/>
         <ellipse cx="187" cy="60" rx="120" ry="8" fill="rgba(192,57,43,0.12)"/>
       </svg>
-      <svg style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);width:160px;height:48px" viewBox="0 0 160 48" xmlns="http://www.w3.org/2000/svg">
+      <svg style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);width:160px;height:48px" viewBox="0 0 160 48">
         <path d="M10 32 Q10 22 20 22 L45 22 Q55 8 80 6 Q105 8 115 22 L140 22 Q150 22 150 32 L150 38 Q140 42 80 42 Q20 42 10 38 Z" fill="#1a2a45" stroke="rgba(212,168,67,0.3)" stroke-width="0.8"/>
-        <path d="M55 22 Q62 10 80 8 Q98 10 105 22 Z" fill="rgba(100,140,200,0.25)" stroke="rgba(212,168,67,0.2)" stroke-width="0.5"/>
+        <path d="M55 22 Q62 10 80 8 Q98 10 105 22 Z" fill="rgba(100,140,200,0.25)"/>
         <circle cx="35" cy="38" r="9" fill="#0d1828" stroke="rgba(212,168,67,0.3)" stroke-width="1"/>
         <circle cx="35" cy="38" r="5" fill="#162035"/>
         <circle cx="125" cy="38" r="9" fill="#0d1828" stroke="rgba(212,168,67,0.3)" stroke-width="1"/>
@@ -247,30 +238,21 @@ input[type=file]{display:none}
       </svg>
     </div>
     <div class="watch-wrap">
-      <div class="watch-bezel">
-        <div class="watch-face">
-          <div class="watch-logo">Pointage</div>
-          <canvas class="watch-canvas" id="watchCanvas" width="114" height="114"></canvas>
-        </div>
-      </div>
+      <div class="watch-bezel"><div class="watch-face">
+        <div class="watch-logo">Pointage</div>
+        <canvas class="watch-canvas" id="watchCanvas" width="114" height="114"></canvas>
+      </div></div>
       <div class="watch-crown"></div>
     </div>
     <div class="hero-text">
-      <div class="hero-badge">
-        <div class="hero-badge-dot"></div>
-        <span class="hero-badge-text">Session en direct</span>
-      </div>
+      <div class="hero-badge"><div class="hero-badge-dot"></div><span class="hero-badge-text">Session en direct</span></div>
       <div class="hero-title">Pointage<br><span>Chauffeurs</span></div>
       <div class="hero-sub">Saisie des heures · Export instantané</div>
     </div>
   </div>
-
   <div class="setup-card">
     <div class="setup-section-title">Identification coordinateur</div>
-    <div class="field">
-      <label>Votre nom</label>
-      <input type="text" id="setup-name" placeholder="Ex : Pierre MARTIN" autocomplete="name">
-    </div>
+    <div class="field"><label>Votre nom</label><input type="text" id="setup-name" placeholder="Ex : Pierre MARTIN" autocomplete="name"></div>
     <div class="field">
       <label>Site de pointage</label>
       <div class="site-grid">
@@ -286,19 +268,17 @@ input[type=file]{display:none}
   </div>
 </div>
 
+<!-- MAIN APP -->
 <div id="screen-main" class="screen">
   <div class="app-header">
     <div class="header-top">
       <div class="h-brand">
         <div class="h-dot"></div>
-        <div>
-          <div class="h-title">Pointage Chauffeurs</div>
-          <div class="h-sub">Session active · <span id="h-site-sub">—</span></div>
-        </div>
+        <div><div class="h-title">Pointage Chauffeurs</div><div class="h-sub">Session active · <span id="h-site-sub">—</span></div></div>
       </div>
       <button class="btn-export" onclick="exportExcel()">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
-        Export Excel
+        Export
       </button>
     </div>
     <div class="header-meta">
@@ -325,89 +305,89 @@ input[type=file]{display:none}
     <button class="today-pill" onclick="goToday()">Aujourd'hui</button>
   </div>
 
-  <div class="main-content">
-    <div class="stats-row">
-      <div class="stat-card s-all"><div class="stat-num">111</div><div class="stat-label">Chauffeurs</div></div>
-      <div class="stat-card s-green"><div class="stat-num" id="stat-debut">0</div><div class="stat-label">Début saisi</div></div>
-      <div class="stat-card s-red"><div class="stat-num" id="stat-fin">0</div><div class="stat-label">Fin saisie</div></div>
+  <div class="tab-content">
+    <!-- LISTE -->
+    <div class="tab-pane active" id="pane-list">
+      <div style="padding-top:12px">
+        <div class="stats-row">
+          <div class="stat-card s-all"><div class="stat-num">111</div><div class="stat-label">Chauffeurs</div></div>
+          <div class="stat-card s-green"><div class="stat-num" id="stat-debut">0</div><div class="stat-label">Début</div></div>
+          <div class="stat-card s-red"><div class="stat-num" id="stat-fin">0</div><div class="stat-label">Fin</div></div>
+        </div>
+        <div class="search-wrap">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input type="text" class="search-input" id="search" placeholder="Rechercher un chauffeur…" oninput="filterDrivers()" autocomplete="off" autocorrect="off" spellcheck="false">
+        </div>
+        <div id="drivers-list"></div>
+        <div id="no-results" class="no-results" style="display:none">Aucun chauffeur trouvé</div>
+        <div style="height:20px"></div>
+      </div>
     </div>
-    <div class="search-wrap">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      <input type="text" class="search-input" id="search" placeholder="Rechercher un chauffeur…" oninput="filterDrivers()" autocomplete="off" autocorrect="off" spellcheck="false">
+
+    <!-- DASHBOARD -->
+    <div class="tab-pane" id="pane-dash">
+      <div style="padding-top:12px">
+        <div style="font-family:var(--syne);font-size:15px;font-weight:700;color:var(--navy);margin-bottom:12px">
+          Tableau de bord <span style="font-size:11px;color:var(--g400);font-weight:400" id="dash-date-label"></span>
+        </div>
+        <div class="kpi-grid">
+          <div class="kpi-card k-green">
+            <div class="kpi-top"><div class="kpi-num" id="kpi-debut">0</div><span style="font-size:20px">🟢</span></div>
+            <div class="kpi-label">Début saisi</div>
+            <div class="kpi-bar-bg"><div class="kpi-bar-fill" id="bar-debut" style="width:0%"></div></div>
+          </div>
+          <div class="kpi-card k-blue">
+            <div class="kpi-top"><div class="kpi-num" id="kpi-fin">0</div><span style="font-size:20px">🔵</span></div>
+            <div class="kpi-label">Fin saisie</div>
+            <div class="kpi-bar-bg"><div class="kpi-bar-fill" id="bar-fin" style="width:0%"></div></div>
+          </div>
+          <div class="kpi-card k-red">
+            <div class="kpi-top"><div class="kpi-num" id="kpi-nonpointes">0</div><span style="font-size:20px">⚪</span></div>
+            <div class="kpi-label">Non pointés</div>
+          </div>
+          <div class="kpi-card k-amber">
+            <div class="kpi-top"><div class="kpi-num" id="kpi-alertes">0</div><span style="font-size:20px">⚠️</span></div>
+            <div class="kpi-label">Alertes</div>
+          </div>
+        </div>
+        <div class="dash-section">🔴 Amplitude &gt; 12h</div>
+        <div id="dash-amplitude"></div>
+        <div class="dash-section">🟠 Repos &lt; 9h</div>
+        <div id="dash-repos"></div>
+        <div class="dash-section">⚪ Non pointés aujourd'hui</div>
+        <div id="dash-nonpointes"></div>
+        <div style="height:20px"></div>
+      </div>
     </div>
-    <div id="drivers-list"></div>
-    <div id="no-results" class="no-results" style="display:none">Aucun chauffeur trouvé</div>
   </div>
 
   <!-- TAB BAR -->
-  <div class="tab-bar" style="position:fixed;bottom:0;left:0;right:0;z-index:100">
+  <div class="tab-bar">
     <button class="tab-btn active" id="tab-list" onclick="switchTab('list')">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-      Liste
-      <div class="tab-indicator"></div>
+      Liste<div class="tab-indicator"></div>
     </button>
     <button class="tab-btn" id="tab-dash" onclick="switchTab('dash')">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="7" height="9" rx="1"/><rect x="15" y="3" width="7" height="5" rx="1"/><rect x="15" y="12" width="7" height="9" rx="1"/><rect x="2" y="16" width="7" height="5" rx="1"/></svg>
-      Dashboard
-      <div class="tab-indicator"></div>
+      Dashboard<div class="tab-indicator"></div>
     </button>
     <button class="tab-btn" id="tab-settings" onclick="openModal('modal-settings')">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
-      Réglages
-      <div class="tab-indicator"></div>
+      Réglages<div class="tab-indicator"></div>
     </button>
   </div>
 </div>
 
-<!-- DASHBOARD SCREEN -->
-<div id="screen-dashboard">
-  <div class="dash-header">
-    Tableau de bord <span class="dash-date" id="dash-date-label">—</span>
+<!-- MODALS -->
+<div class="modal-overlay" id="modal-settings" onclick="closeMO(event,'modal-settings')">
+  <div class="modal-sheet">
+    <div class="modal-title">Réglages</div>
+    <button class="modal-btn" onclick="closeModal('modal-settings');openModal('modal-site')"><span class="micon">🅿️</span>Changer de site</button>
+    <button class="modal-btn" onclick="closeModal('modal-settings');openModal('modal-coord')"><span class="micon">👤</span>Changer de coordinateur</button>
+    <button class="modal-btn" onclick="closeModal('modal-settings');exportExcel()"><span class="micon">📥</span>Export Excel</button>
+    <button class="modal-cancel" onclick="closeModal('modal-settings')">Fermer</button>
   </div>
-
-  <div class="kpi-grid">
-    <div class="kpi-card k-green">
-      <div class="kpi-top">
-        <div class="kpi-num" id="kpi-debut">0</div>
-        <span style="font-size:20px">🟢</span>
-      </div>
-      <div class="kpi-label">Début saisi</div>
-      <div class="kpi-bar-bg" style="margin-top:8px"><div class="kpi-bar-fill k-green" id="bar-debut" style="width:0%"></div></div>
-    </div>
-    <div class="kpi-card k-blue">
-      <div class="kpi-top">
-        <div class="kpi-num" id="kpi-fin">0</div>
-        <span style="font-size:20px">🔵</span>
-      </div>
-      <div class="kpi-label">Fin saisie</div>
-      <div class="kpi-bar-bg" style="margin-top:8px"><div class="kpi-bar-fill k-blue" id="bar-fin" style="width:0%"></div></div>
-    </div>
-    <div class="kpi-card k-red">
-      <div class="kpi-top">
-        <div class="kpi-num" id="kpi-nonpointes">0</div>
-        <span style="font-size:20px">⚪</span>
-      </div>
-      <div class="kpi-label">Non pointés</div>
-    </div>
-    <div class="kpi-card k-amber">
-      <div class="kpi-top">
-        <div class="kpi-num" id="kpi-alertes">0</div>
-        <span style="font-size:20px">⚠️</span>
-      </div>
-      <div class="kpi-label">Alertes</div>
-    </div>
-  </div>
-
-  <div class="dash-section">⏱ Amplitude > 12h</div>
-  <div id="dash-amplitude"></div>
-
-  <div class="dash-section">😴 Repos < 9h</div>
-  <div id="dash-repos"></div>
-
-  <div class="dash-section">⚪ Non pointés aujourd'hui</div>
-  <div id="dash-nonpointes"></div>
 </div>
-
 <div class="modal-overlay" id="modal-site" onclick="closeMO(event,'modal-site')">
   <div class="modal-sheet">
     <div class="modal-title">Changer de site</div>
@@ -417,7 +397,6 @@ input[type=file]{display:none}
     <button class="modal-cancel" onclick="closeModal('modal-site')">Annuler</button>
   </div>
 </div>
-
 <div class="modal-overlay" id="modal-coord" onclick="closeMO(event,'modal-coord')">
   <div class="modal-sheet">
     <div class="modal-title">Changer de coordinateur</div>
@@ -429,29 +408,14 @@ input[type=file]{display:none}
 
 <div class="toast" id="toast"></div>
 
-<!-- MODAL SETTINGS -->
-<div class="modal-overlay" id="modal-settings" onclick="closeMO(event,'modal-settings')">
-  <div class="modal-sheet">
-    <div class="modal-title">Réglages</div>
-    <button class="modal-btn" onclick="closeModal('modal-settings');openModal('modal-site')"><span class="micon">🅿️</span>Changer de site</button>
-    <button class="modal-btn" onclick="closeModal('modal-settings');openModal('modal-coord')"><span class="micon">👤</span>Changer de coordinateur</button>
-    <button class="modal-btn" onclick="closeModal('modal-settings');exportExcel()"><span class="micon">📥</span>Export Excel</button>
-    <button class="modal-cancel" onclick="closeModal('modal-settings')">Fermer</button>
-  </div>
-</div>
-
 <script>
 const SHEET_URL='https://script.google.com/macros/s/AKfycbySTEpB7xAYELRwZ7ISz3aaBWAu6eshlCS5XnquTiEZXRTzfo9aUfmKyeX_B5IqpSeCWA/exec';
-
 const CHAUFFEURS=[{id:1,nom:"BARBE Frederic",affectation:"Délégation G7 1 VIP"},{id:2,nom:"CHAÏRA Aziz",affectation:"Délégation G7 1 VIP"},{id:3,nom:"ESWARANATHAN Suvethan",affectation:"Délégation G7 1"},{id:4,nom:"ALOUCHE Younes",affectation:"Délégation G7 1"},{id:5,nom:"ZEGGAI Kamel",affectation:"Délégation G7 1"},{id:6,nom:"BOUHENNI Mohamed",affectation:"Délégation G7 2 VIP"},{id:7,nom:"ANTUNES Fabien",affectation:"Délégation G7 2 VIP"},{id:8,nom:"JABR Abderrahim",affectation:"Délégation G7 2"},{id:9,nom:"AKROUCH Saif",affectation:"Délégation G7 2"},{id:10,nom:"TAHRI Madjid",affectation:"Délégation G7 2"},{id:11,nom:"BARKATE Thierry",affectation:"Délégation G7 3 VIP"},{id:12,nom:"LEROY Laurent",affectation:"Délégation G7 3 VIP"},{id:13,nom:"HAFIDI Sofiane",affectation:"Délégation G7 3"},{id:14,nom:"AMRAOUI Mohamed",affectation:"Délégation G7 3"},{id:15,nom:"SOUKHMANI Said",affectation:"Délégation G7 3"},{id:16,nom:"PERISSE Fabien",affectation:"Délégation G7 4 VIP"},{id:17,nom:"OUCHAOUI Hassan",affectation:"Délégation G7 4 VIP"},{id:18,nom:"PICAUD / WATELET Georges-Henri",affectation:"Délégation G7 4"},{id:19,nom:"BELMAAZIZ Abdelmadjid",affectation:"Délégation G7 4"},{id:20,nom:"IBN-SINA Nawel",affectation:"Délégation G7 4"},{id:21,nom:"SOUICI Sofiane",affectation:"Délégation G7 5 VIP"},{id:22,nom:"ELOY Cedric",affectation:"Délégation G7 5 VIP"},{id:23,nom:"JABRE Jamal",affectation:"Délégation G7 5"},{id:24,nom:"GOMES RAMOS Loic",affectation:"Délégation G7 5"},{id:25,nom:"NOGARO Cyril",affectation:"Délégation G7 5"},{id:26,nom:"PIAZZA Pascal",affectation:"Délégation G7 6 VIP"},{id:27,nom:"GUESMI Aladin",affectation:"Délégation G7 6 VIP"},{id:28,nom:"JAA Rachid",affectation:"Délégation G7 6"},{id:29,nom:"GAMBOA ESPINOZA Eddy",affectation:"Délégation G7 6"},{id:30,nom:"BOURROUM Driss",affectation:"Délégation G7 6"},{id:31,nom:"SAFOUANE Hicham",affectation:"Délégation UE 1 VIP"},{id:32,nom:"CHOUF Samir",affectation:"Délégation UE 1 VIP"},{id:33,nom:"GIRALDO MENDEZ Bryan",affectation:"Délégation UE 1"},{id:34,nom:"DIALLO Mamadou Kally",affectation:"Délégation UE 1"},{id:35,nom:"DANTAN MERLIN Guy",affectation:"Délégation UE 1"},{id:36,nom:"MEIRA Gabriel",affectation:"Délégation UE 2 VIP"},{id:37,nom:"LOSFELD Jean-Barthélémy",affectation:"Délégation UE 2 VIP"},{id:38,nom:"HEBBADJ Jelani",affectation:"Délégation UE 2"},{id:39,nom:"DOVOEDO Jonathan",affectation:"Délégation UE 2"},{id:40,nom:"BLONDEL Grégory",affectation:"Délégation UE 2"},{id:41,nom:"BENYEKKOU Mohamed El Amine",affectation:"Délégation Outreachs 1 VIP"},{id:42,nom:"MAKOUBI Yassin",affectation:"Délégation Outreachs 1 VIP"},{id:43,nom:"DESSON Alexandre",affectation:"Délégation Outreachs 1"},{id:44,nom:"JOLIBOIS Kyllian",affectation:"Délégation Outreachs 1"},{id:45,nom:"TIGHLIT Salima",affectation:"Délégation Outreachs 1"},{id:46,nom:"GRAVOUIL Nicolas",affectation:"Délégation Outreachs 2 VIP"},{id:47,nom:"BAZIRE D'ARGUESSE Amaury",affectation:"Délégation Outreachs 2 VIP"},{id:48,nom:"ELKIRAT Zakaria",affectation:"Délégation Outreachs 2"},{id:49,nom:"MEVIL Jose",affectation:"Délégation Outreachs 2"},{id:50,nom:"BOUMEDIENE Billal",affectation:"Délégation Outreachs 2"},{id:51,nom:"SOZIO Sacha",affectation:"Délégation Outreachs 3 VIP"},{id:52,nom:"BENAMARI Hazim",affectation:"Délégation Outreachs 3 VIP"},{id:53,nom:"BEN HADJ MESSAOUD Maher",affectation:"Délégation Outreachs 3"},{id:54,nom:"SEBAHI Mehdy",affectation:"Délégation Outreachs 3"},{id:55,nom:"MIRZA-PERVEZ Ahmed",affectation:"Délégation Outreachs 3"},{id:56,nom:"VUILLEMIN Jean Pierre",affectation:"Délégation Outreachs 4 VIP"},{id:57,nom:"AHMED Marjan",affectation:"Délégation Outreachs 4 VIP"},{id:58,nom:"BOUKHARMOUS Brahim",affectation:"Délégation Outreachs 4"},{id:59,nom:"SENEGA Samba",affectation:"Délégation Outreachs 4"},{id:60,nom:"MOUI Mehdi",affectation:"Délégation Outreachs 4"},{id:61,nom:"BELTRAN Laurent",affectation:"Délégation Outreachs 5 VIP"},{id:62,nom:"AKYUZ Vefa",affectation:"Délégation Outreachs 5 VIP"},{id:63,nom:"MARINHO Joel",affectation:"Délégation Outreachs 5"},{id:64,nom:"BADDOUH Otmane",affectation:"Délégation Outreachs 5"},{id:65,nom:"VIVIEN Vincent",affectation:"Délégation Outreachs 5"},{id:66,nom:"AFFAINIE Wilfried",affectation:"OI 1"},{id:67,nom:"OUADAH Yazide",affectation:"OI 2"},{id:68,nom:"MILETO Franck",affectation:"OI 3"},{id:69,nom:"HAZAR Raphael",affectation:"OI 4"},{id:70,nom:"BAMBARA Curtis",affectation:"DZ-Hôtel 1"},{id:71,nom:"TERZI Mebarek",affectation:"DZ-Hôtel 2"},{id:72,nom:"HAGUY Jean Jacques",affectation:"DZ-Hôtel 3"},{id:73,nom:"CENTINI Simone",affectation:"DZ-Hôtel 4"},{id:74,nom:"BEHIER Florian",affectation:"DZ-Hôtel 5"},{id:75,nom:"ARRIBAS Kévin",affectation:"DZ-Hôtel 6"},{id:76,nom:"PEYRIGA Jean-Charles",affectation:"DZ-Hôtel 7"},{id:77,nom:"CHAIR Fouad",affectation:"DZ-Hôtel 8"},{id:78,nom:"CHAFIK EL IDRISSI ABDELALI",affectation:"DZ-Hôtel 9"},{id:79,nom:"BORRHOMEE Lucas",affectation:"DZ-Hôtel 10"},{id:80,nom:"ROQUELAURE Johan",affectation:"DZ-Hôtel 11"},{id:81,nom:"RAHMOUNI Bilal",affectation:"DZ-Hôtel 12"},{id:82,nom:"BARSOUM Kevin",affectation:"DZ-Hôtel 13 Spare"},{id:83,nom:"KECHICHIAN Maykel",affectation:"DZ-Hôtel 14 Spare"},{id:84,nom:"BERGER Hervé",affectation:"Spare DZ 1"},{id:85,nom:"SANCHEZ Alfonso",affectation:"Spare DZ 2"},{id:86,nom:"SAEZ Dimitri",affectation:"Resort 1"},{id:87,nom:"GUILLAUME Ted",affectation:"Resort 2"},{id:88,nom:"RIBEIRO MOREIRA Sueli",affectation:"Resort 3"},{id:89,nom:"N'GUESSAN Kevin",affectation:"Resort 4"},{id:90,nom:"AMSELLEM Raphaël",affectation:"Resort 5"},{id:91,nom:"MONY Didier",affectation:"Resort 6"},{id:92,nom:"TERMECHE Nacer",affectation:"Resort 7"},{id:93,nom:"PORCHEREL Albin",affectation:"Resort 8"},{id:94,nom:"DETREE Eric",affectation:"Spare 1"},{id:95,nom:"SIVISAY Yves",affectation:"Spare 2"},{id:96,nom:"ZEHHAF - SEBAHI Saffia",affectation:"Spare 3"},{id:97,nom:"BENHENDA Célia",affectation:"Spare 4"},{id:98,nom:"ROUABAH Moufida",affectation:"Spare 5"},{id:99,nom:"BEN ABBES - MAMI Salma",affectation:"Spare 6"},{id:100,nom:"MAYTE Alain",affectation:"Spare 7"},{id:101,nom:"MASSARI Yves",affectation:"Spare 8"},{id:102,nom:"ROCHE Tony",affectation:"Reserve chauffeur 1"},{id:103,nom:"ACHOUR LOKHDIRI Mohamed-Hedi",affectation:"Reserve chauffeur 2"},{id:104,nom:"ADROUCHE Sofiane",affectation:"Reserve chauffeur 3"},{id:105,nom:"BENGUEZZOU Malik",affectation:"Reserve chauffeur 4"},{id:106,nom:"SIMON Eric",affectation:"Reserve chauffeur 5"},{id:107,nom:"EL HADJAM Ahmed",affectation:"Reserve chauffeur 6"},{id:108,nom:"POUVIN Rodrigue",affectation:"Reserve chauffeur 7"},{id:109,nom:"NJOH Yann",affectation:"Reserve chauffeur 8"},{id:110,nom:"MAATOUG Mohamed",affectation:"Reserve chauffeur 9"},{id:111,nom:"ADKHIS Farid",affectation:"Reserve chauffeur 10"}];
 
 let state={coordinator:'',site:'',currentDate:new Date(),data:{},openCard:null};
 
 // STARS
-(function(){
-  const c=document.getElementById('stars');if(!c)return;
-  for(let i=0;i<60;i++){const s=document.createElement('div');s.className='star';const sz=Math.random()*2+.5;s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*55}%;left:${Math.random()*100}%;--op:${Math.random()*.7+.3};--dur:${2+Math.random()*3}s;--del:${Math.random()*3}s`;c.appendChild(s);}
-})();
+(function(){const c=document.getElementById('stars');if(!c)return;for(let i=0;i<60;i++){const s=document.createElement('div');s.className='star';const sz=Math.random()*2+.5;s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*55}%;left:${Math.random()*100}%;--op:${Math.random()*.7+.3};--dur:${2+Math.random()*3}s;--del:${Math.random()*3}s`;c.appendChild(s);}})();
 
 // WATCH
 function drawWatch(){
@@ -476,12 +440,7 @@ setInterval(drawWatch,1000);drawWatch();
 
 // SETUP
 document.getElementById('setup-name').addEventListener('input',checkSetup);
-function selectSite(s){
-  state.site=s;
-  ['hilton','odalys','autre'].forEach(id=>document.getElementById('site-'+id).classList.remove('selected'));
-  document.getElementById('site-'+s.toLowerCase()).classList.add('selected');
-  checkSetup();
-}
+function selectSite(s){state.site=s;['hilton','odalys','autre'].forEach(id=>document.getElementById('site-'+id).classList.remove('selected'));document.getElementById('site-'+s.toLowerCase()).classList.add('selected');checkSetup();}
 function checkSetup(){document.getElementById('btn-start').disabled=!(document.getElementById('setup-name').value.trim()&&state.site)}
 function startApp(){
   state.coordinator=document.getElementById('setup-name').value.trim();
@@ -490,10 +449,11 @@ function startApp(){
   document.getElementById('h-site-sub').textContent=state.site;
   document.getElementById('screen-setup').classList.remove('active');
   document.getElementById('screen-main').classList.add('active');
-  updateDateLabel();loadFromSheet();
+  updateDateLabel();
+  loadFromSheet();
 }
 
-// LOAD FROM SHEET
+// LOAD FROM SHEET - fetch simple qui fonctionnait
 function loadFromSheet(){
   document.getElementById('drivers-list').innerHTML='<div style="text-align:center;padding:32px 20px;color:var(--g400);font-size:13px">Chargement des données…</div>';
   fetch(SHEET_URL)
@@ -506,58 +466,44 @@ function loadFromSheet(){
           const c=CHAUFFEURS.find(x=>x.nom===row.nom||x.id===parseInt(row.id));
           if(!c)return;
           const key=c.id+'_'+row.date;
-          state.data[key]={
-            heureDebut:row.heureDebut||'',kmDepart:row.kmDepart||'',
-            heureFin:row.heureFin||'',kmRetour:row.kmRetour||'',
-            heureReco:row.heureReco||''
-          };
+          state.data[key]={heureDebut:row.heureDebut||'',kmDepart:row.kmDepart||'',heureFin:row.heureFin||'',kmRetour:row.kmRetour||'',heureReco:row.heureReco||''};
         });
         showToast('✓ Données synchronisées');
       }
       renderDrivers();
     })
-    .catch(()=>{showToast('⚠️ Hors ligne');renderDrivers();});
+    .catch(()=>{showToast('⚠️ Erreur de chargement');renderDrivers();});
 }
 
 // DATE
-function fmtDate(d){
-  const days=['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
-  const months=['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
-  return{day:days[d.getDay()],full:`${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`};
-}
+function fmtDate(d){const days=['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'],months=['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];return{day:days[d.getDay()],full:`${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`}}
 function dateKey(d){return`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
-function updateDateLabel(){
-  const today=new Date(),isToday=dateKey(state.currentDate)===dateKey(today),f=fmtDate(state.currentDate);
-  document.getElementById('date-label').textContent=isToday?`Aujourd'hui · ${f.day}`:f.day;
-  document.getElementById('date-sub').textContent=f.full;
-}
-function changeDate(d){state.currentDate.setDate(state.currentDate.getDate()+d);updateDateLabel();state.openCard=null;loadFromSheet()}
-function goToday(){state.currentDate=new Date();updateDateLabel();state.openCard=null;loadFromSheet()}
+function updateDateLabel(){const today=new Date(),isToday=dateKey(state.currentDate)===dateKey(today),f=fmtDate(state.currentDate);document.getElementById('date-label').textContent=isToday?`Aujourd'hui · ${f.day}`:f.day;document.getElementById('date-sub').textContent=f.full;}
+function changeDate(d){state.currentDate.setDate(state.currentDate.getDate()+d);updateDateLabel();state.openCard=null;loadFromSheet();}
+function goToday(){state.currentDate=new Date();updateDateLabel();state.openCard=null;loadFromSheet();}
 function getKey(id){return`${id}_${dateKey(state.currentDate)}`}
 function getData(id){return state.data[getKey(id)]||{}}
 function initials(n){const p=n.split(' ').filter(x=>x.length>1);return p.length>=2?(p[0][0]+p[p.length-1][0]).toUpperCase():n.substring(0,2).toUpperCase()}
+function timeToMins(t){if(!t||!t.includes(':'))return-1;const[h,m]=t.split(':').map(Number);return h*60+m;}
 
 function updateStats(){
-  let d=0,f=0;
-  CHAUFFEURS.forEach(c=>{const dd=getData(c.id);if(dd.heureDebut)d++;if(dd.heureFin)f++;});
+  let d=0,f=0;CHAUFFEURS.forEach(c=>{const dd=getData(c.id);if(dd.heureDebut)d++;if(dd.heureFin)f++;});
   document.getElementById('stat-debut').textContent=d;
   document.getElementById('stat-fin').textContent=f;
-  document.getElementById('bottom-info').textContent=`${d} début · ${f} fin`;
+}
+
+function getAlertIcons(id){
+  const d=getData(id);let icons='';
+  if(d.heureDebut&&d.heureFin){const diff=timeToMins(d.heureFin)-timeToMins(d.heureDebut);const diffAdj=diff<0?diff+1440:diff;if(diffAdj>720)icons+='<span title="Amplitude > 12h">🔴</span>';}
+  if(d.heureFin&&d.heureReco){const repos=timeToMins(d.heureReco)-timeToMins(d.heureFin);const reposAdj=repos<0?repos+1440:repos;if(reposAdj>0&&reposAdj<540)icons+='<span title="Repos < 9h">🟠</span>';}
+  return icons;
 }
 
 function photoBtn(id,type){
-  const d=getData(id);
-  const hasPhoto=type==='debut'?d.photoDebut:d.photoFin;
+  const d=getData(id),hasPhoto=type==='debut'?d.photoDebut:d.photoFin;
   const label=type==='debut'?'📷 Photo prise de service':'📷 Photo fin de service';
   const labelDone=type==='debut'?'✅ Photo début — changer':'✅ Photo fin — changer';
-  return `<div class="photo-row">
-    <button class="btn-photo${hasPhoto?' has-photo':''}" onclick="triggerPhoto(${id},'${type}')" id="photobtn-${type}-${id}">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
-      ${hasPhoto?labelDone:label}
-    </button>
-    <input type="file" accept="image/*" capture="environment" id="fileinput-${type}-${id}" onchange="handlePhoto(${id},'${type}',this)">
-    <img class="photo-preview${hasPhoto?' visible':''}" id="photoimg-${type}-${id}" src="${hasPhoto||''}" alt="">
-  </div>`;
+  return`<div class="photo-row"><button class="btn-photo${hasPhoto?' has-photo':''}" onclick="triggerPhoto(${id},'${type}')" id="photobtn-${type}-${id}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>${hasPhoto?labelDone:label}</button><input type="file" accept="image/*" capture="environment" id="fileinput-${type}-${id}" onchange="handlePhoto(${id},'${type}',this)"><img class="photo-preview${hasPhoto?' visible':''}" id="photoimg-${type}-${id}" src="${hasPhoto||''}" alt=""></div>`;
 }
 
 function renderDrivers(){
@@ -572,13 +518,14 @@ function renderDrivers(){
     const avCls=complete?'complete':hasD?'filled':'',avTxt=complete?'✓':initials(c.nom);
     const tbD=hasD?`<span class="time-badge done">${d.heureDebut}</span>`:`<span class="time-badge">--:--</span>`;
     const tbF=hasF?`<span class="time-badge done">${d.heureFin}</span>`:`<span class="time-badge">--:--</span>`;
+    const alertIcons=getAlertIcons(c.id);
     return`<div class="driver-card${complete?' complete':hasD?' has-data':''}${isOpen?' open':''}" id="card-${c.id}">
 <div class="driver-header" onclick="toggleCard(${c.id})">
   <div class="driver-left">
     <div class="driver-avatar ${avCls}">${avTxt}</div>
     <div><div class="driver-name">${c.nom}</div><div class="driver-aff">${c.affectation}</div></div>
   </div>
-  <div class="driver-right">${tbD}${tbF}<span class="driver-alerts">${alertIcons(c.id)}</span><span class="chevron">▾</span></div>
+  <div class="driver-right">${tbD}${tbF}<span class="alert-icons">${alertIcons}</span><span class="chevron">▾</span></div>
 </div>
 <div class="driver-form">
   <div class="sec-divider">Prise de service</div>
@@ -603,10 +550,7 @@ function renderDrivers(){
   }).join('');
 }
 
-function toggleCard(id){
-  state.openCard=state.openCard===id?null:id;renderDrivers();
-  if(state.openCard===id){setTimeout(()=>{const el=document.getElementById('card-'+id);if(el)el.scrollIntoView({behavior:'smooth',block:'nearest'})},60)}
-}
+function toggleCard(id){state.openCard=state.openCard===id?null:id;renderDrivers();if(state.openCard===id){setTimeout(()=>{const el=document.getElementById('card-'+id);if(el)el.scrollIntoView({behavior:'smooth',block:'nearest'})},60)}}
 
 function autosave(id){
   const hd=document.getElementById('hd-'+id)?.value,kd=document.getElementById('kd-'+id)?.value;
@@ -617,41 +561,30 @@ function autosave(id){
   const b=card.querySelectorAll('.time-badge');
   if(b[0]){b[0].textContent=hd||'--:--';b[0].className='time-badge'+(hd?' done':'')}
   if(b[1]){b[1].textContent=hf||'--:--';b[1].className='time-badge'+(hf?' done':'')}
+  // update alert icons
+  const ai=card.querySelector('.alert-icons');if(ai)ai.innerHTML=getAlertIcons(id);
   updateStats();
 }
 
 function triggerPhoto(id,type){document.getElementById('fileinput-'+type+'-'+id)?.click()}
-
 function handlePhoto(id,type,input){
   if(!input.files||!input.files[0])return;
   const reader=new FileReader();
   reader.onload=e=>{
-    const photoData=e.target.result;
+    const photoData=e.target.result,photoKey=type==='debut'?'photoDebut':'photoFin';
     if(!state.data[getKey(id)])state.data[getKey(id)]={};
-    const photoKey=type==='debut'?'photoDebut':'photoFin';
     state.data[getKey(id)][photoKey]=photoData;
-    const btn=document.getElementById('photobtn-'+type+'-'+id);
-    const img=document.getElementById('photoimg-'+type+'-'+id);
-    const label=type==='debut'?'début':'fin';
-    if(btn){btn.innerHTML=`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg> ⏳ Envoi en cours…`;btn.classList.add('has-photo')}
+    const btn=document.getElementById('photobtn-'+type+'-'+id),img=document.getElementById('photoimg-'+type+'-'+id),label=type==='debut'?'début':'fin';
+    if(btn){btn.innerHTML=`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg> ⏳ Envoi…`;btn.classList.add('has-photo')}
     if(img){img.src=photoData;img.classList.add('visible')}
     const c=CHAUFFEURS.find(x=>x.id===id);
     fetch(SHEET_URL,{method:'POST',body:JSON.stringify({type:'photo',photoType:type,photo:photoData,date:dateKey(state.currentDate),site:state.site,coordinator:state.coordinator,id:c.id,nom:c.nom})})
       .then(r=>r.json())
       .then(res=>{
-        if(res.status==='ok'){
-          state.data[getKey(id)][photoKey+'Url']=res.url;
-          if(btn)btn.innerHTML=`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg> ✅ Photo ${label} sur Drive`;
-          showToast('✓ Photo '+label+' sauvegardée sur Drive');
-        } else {
-          if(btn)btn.innerHTML=`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg> 📎 Photo ${label} (local)`;
-          showToast('Photo sauvegardée localement');
-        }
+        if(btn)btn.innerHTML=`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg> ${res.status==='ok'?'✅ Photo '+label+' sur Drive':'📎 Photo '+label+' (local)'}`;
+        showToast(res.status==='ok'?'✓ Photo '+label+' sur Drive':'Photo sauvegardée localement');
       })
-      .catch(()=>{
-        if(btn)btn.innerHTML=`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg> 📎 Photo ${label} (hors ligne)`;
-        showToast('⚠️ Hors ligne — photo locale');
-      });
+      .catch(()=>{if(btn)btn.innerHTML=`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg> 📎 Photo ${label} (hors ligne)`;showToast('⚠️ Hors ligne');});
   };
   reader.readAsDataURL(input.files[0]);
 }
@@ -663,18 +596,68 @@ function saveDriver(id){
   if(card){card.className=`driver-card${complete?' complete':d.heureDebut?' has-data':''} open`;const av=card.querySelector('.driver-avatar');if(av){av.className=`driver-avatar${complete?' complete':d.heureDebut?' filled':''}`;av.textContent=complete?'✓':initials(c.nom)}}
   const btn=document.getElementById('savebtn-'+id);
   if(btn){btn.className='btn-save'+(complete?' saved':'');btn.innerHTML=complete?'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Enregistré':'Enregistrer'}
-  updateStats();
-  showToast(`✓ ${c.nom.split(' ')[0]} enregistré`);
-  // Send to sheet
-  const payload={date:dateKey(state.currentDate),site:state.site,coordinator:state.coordinator,id:c.id,nom:c.nom,affectation:c.affectation,heureDebut:d.heureDebut||'',kmDepart:d.kmDepart||'',heureFin:d.heureFin||'',kmRetour:d.kmRetour||'',heureReco:d.heureReco||''};
-  fetch(SHEET_URL,{method:'POST',body:JSON.stringify(payload)})
-    .then(r=>r.json())
-    .then(r=>{if(r.status==='ok')showToast('✓ Synchronisé Google Sheets')})
+  updateStats();showToast(`✓ ${c.nom.split(' ')[0]} enregistré`);
+  fetch(SHEET_URL,{method:'POST',body:JSON.stringify({date:dateKey(state.currentDate),site:state.site,coordinator:state.coordinator,id:c.id,nom:c.nom,affectation:c.affectation,heureDebut:d.heureDebut||'',kmDepart:d.kmDepart||'',heureFin:d.heureFin||'',kmRetour:d.kmRetour||'',heureReco:d.heureReco||''})})
+    .then(r=>r.json()).then(r=>{if(r.status==='ok')showToast('✓ Synchronisé')})
     .catch(()=>showToast('⚠️ Hors ligne — sauvegardé localement'));
 }
 
 function filterDrivers(){state.openCard=null;renderDrivers()}
 
+// TABS
+function switchTab(tab){
+  ['list','dash'].forEach(t=>{
+    document.getElementById('tab-'+t).classList.toggle('active',t===tab);
+    document.getElementById('pane-'+t).classList.toggle('active',t===tab);
+  });
+  if(tab==='dash')renderDashboard();
+}
+
+// DASHBOARD
+function renderDashboard(){
+  const f=fmtDate(state.currentDate);
+  document.getElementById('dash-date-label').textContent=f.full;
+  const total=CHAUFFEURS.length;
+  let debut=0,fin=0,amplitude=[],reposList=[],nonPointes=[];
+  CHAUFFEURS.forEach(c=>{
+    const d=getData(c.id);
+    if(d.heureDebut)debut++;
+    if(d.heureFin)fin++;
+    if(!d.heureDebut)nonPointes.push(c);
+    if(d.heureDebut&&d.heureFin){
+      let diff=timeToMins(d.heureFin)-timeToMins(d.heureDebut);
+      if(diff<0)diff+=1440;
+      if(diff>720)amplitude.push({c,diff,heureDebut:d.heureDebut,heureFin:d.heureFin});
+    }
+    if(d.heureFin&&d.heureReco){
+      let repos=timeToMins(d.heureReco)-timeToMins(d.heureFin);
+      if(repos<0)repos+=1440;
+      if(repos>0&&repos<540)reposList.push({c,repos,heureFin:d.heureFin,heureReco:d.heureReco});
+    }
+  });
+  document.getElementById('kpi-debut').textContent=debut+'/'+total;
+  document.getElementById('kpi-fin').textContent=fin+'/'+total;
+  document.getElementById('kpi-nonpointes').textContent=nonPointes.length;
+  document.getElementById('kpi-alertes').textContent=amplitude.length+reposList.length;
+  document.getElementById('bar-debut').style.width=(debut/total*100)+'%';
+  document.getElementById('bar-fin').style.width=(fin/total*100)+'%';
+
+  const fmtDur=mins=>{const h=Math.floor(mins/60),m=mins%60;return`${h}h${String(m).padStart(2,'0')}`};
+
+  document.getElementById('dash-amplitude').innerHTML=amplitude.length===0
+    ?'<div class="dash-empty">✅ Aucune amplitude dépassée</div>'
+    :amplitude.map(({c,diff,heureDebut,heureFin})=>`<div class="alert-card a-red"><span class="alert-icon">🔴</span><div><div class="alert-name">${c.nom}</div><div class="alert-detail">${heureDebut} → ${heureFin}</div></div><span class="alert-badge">${fmtDur(diff)}</span></div>`).join('');
+
+  document.getElementById('dash-repos').innerHTML=reposList.length===0
+    ?'<div class="dash-empty">✅ Tous les repos sont conformes</div>'
+    :reposList.map(({c,repos,heureFin,heureReco})=>`<div class="alert-card a-amber"><span class="alert-icon">🟠</span><div><div class="alert-name">${c.nom}</div><div class="alert-detail">Fin ${heureFin} → Reco ${heureReco}</div></div><span class="alert-badge">${fmtDur(repos)}</span></div>`).join('');
+
+  document.getElementById('dash-nonpointes').innerHTML=nonPointes.length===0
+    ?'<div class="dash-empty">✅ Tous les chauffeurs sont pointés</div>'
+    :nonPointes.slice(0,20).map(c=>`<div class="alert-card" style="border-left-color:var(--g200)"><span class="alert-icon">⚪</span><div><div class="alert-name">${c.nom}</div><div class="alert-detail">${c.affectation}</div></div></div>`).join('')+(nonPointes.length>20?`<div class="dash-empty">+${nonPointes.length-20} autres</div>`:'');
+}
+
+// EXPORT
 function exportExcel(){
   const rows=[['Date','Site','Coordinateur','#','Chauffeur','Affectation','H. Début','Km Départ','H. Fin','Km Retour','H. Reco J+1']];
   const keys=Object.keys(state.data);
@@ -697,131 +680,7 @@ function openModal(id){document.getElementById(id).classList.add('open')}
 function closeModal(id){document.getElementById(id).classList.remove('open')}
 function closeMO(e,id){if(e.target===document.getElementById(id))closeModal(id)}
 function changeSite(s){state.site=s;document.getElementById('ctx-site').textContent=s;document.getElementById('h-site-sub').textContent=s;showToast('Site : '+s)}
-function changeCoord(){
-  const v=document.getElementById('new-coord').value.trim();if(!v)return;
-  state.coordinator=v;document.getElementById('ctx-name').textContent=v;
-  closeModal('modal-coord');document.getElementById('new-coord').value='';showToast('Coordinateur : '+v);
-}
-
-// ══ TAB SWITCHING ══
-function switchTab(tab){
-  document.getElementById('tab-list').classList.toggle('active', tab==='list');
-  document.getElementById('tab-dash').classList.toggle('active', tab==='dash');
-  document.getElementById('tab-settings').classList.toggle('active', tab==='settings');
-  document.getElementById('drivers-list').closest('.main-content').style.display = tab==='list'?'block':'none';
-  document.querySelector('.search-wrap').style.display = tab==='list'?'block':'none';
-  document.querySelector('.stats-row').style.display = tab==='list'?'grid':'none';
-  document.getElementById('screen-dashboard').classList.toggle('active', tab==='dash');
-  if(tab==='dash') renderDashboard();
-}
-
-// ══ ALERT ICONS ON CARDS ══
-function alertIcons(id){
-  const d=getData(id);
-  let icons='';
-  if(d.heureDebut&&d.heureFin){
-    const diff=timeToMins(d.heureFin)-timeToMins(d.heureDebut);
-    if(diff>12*60) icons+='<span title="Amplitude > 12h" style="font-size:13px">🔴</span>';
-  }
-  if(d.heureFin&&d.heureReco){
-    const repos=timeToMins(d.heureReco)-timeToMins(d.heureFin);
-    const reposAdj=repos<0?repos+24*60:repos;
-    if(reposAdj<9*60) icons+='<span title="Repos < 9h" style="font-size:13px">🟠</span>';
-  }
-  return icons;
-}
-
-function timeToMins(t){
-  if(!t||typeof t!=='string'||!t.includes(':'))return 0;
-  const[h,m]=t.split(':').map(Number);
-  return h*60+m;
-}
-
-// ══ DASHBOARD ══
-function renderDashboard(){
-  const f=fmtDate(state.currentDate);
-  document.getElementById('dash-date-label').textContent=f.full;
-
-  let debut=0,fin=0,amplitude=[],nonPointes=[];repos_list=[];
-  const total=CHAUFFEURS.length;
-
-  CHAUFFEURS.forEach(c=>{
-    const d=getData(c.id);
-    if(d.heureDebut) debut++;
-    if(d.heureFin) fin++;
-
-    // Non pointés
-    if(!d.heureDebut) nonPointes.push(c);
-
-    // Amplitude > 12h
-    if(d.heureDebut&&d.heureFin){
-      let diff=timeToMins(d.heureFin)-timeToMins(d.heureDebut);
-      if(diff<0) diff+=24*60;
-      if(diff>12*60) amplitude.push({c,diff,heureDebut:d.heureDebut,heureFin:d.heureFin});
-    }
-
-    // Repos < 9h
-    if(d.heureFin&&d.heureReco){
-      let repos=timeToMins(d.heureReco)-timeToMins(d.heureFin);
-      if(repos<0) repos+=24*60;
-      if(repos<9*60) repos_list.push({c,repos,heureFin:d.heureFin,heureReco:d.heureReco});
-    }
-  });
-
-  // KPIs
-  document.getElementById('kpi-debut').textContent=debut+'/'+total;
-  document.getElementById('kpi-fin').textContent=fin+'/'+total;
-  document.getElementById('kpi-nonpointes').textContent=nonPointes.length;
-  document.getElementById('kpi-alertes').textContent=amplitude.length+repos_list.length;
-  document.getElementById('bar-debut').style.width=(debut/total*100)+'%';
-  document.getElementById('bar-fin').style.width=(fin/total*100)+'%';
-
-  // Amplitude alerts
-  const ampEl=document.getElementById('dash-amplitude');
-  if(amplitude.length===0){
-    ampEl.innerHTML='<div class="dash-empty">✅ Aucune amplitude dépassée</div>';
-  } else {
-    ampEl.innerHTML=amplitude.map(({c,diff,heureDebut,heureFin})=>{
-      const h=Math.floor(diff/60),m=diff%60;
-      return`<div class="alert-card a-red">
-        <span class="alert-icon">🔴</span>
-        <div><div class="alert-name">${c.nom}</div><div class="alert-detail">${heureDebut} → ${heureFin}</div></div>
-        <span class="alert-badge">${h}h${String(m).padStart(2,'0')}</span>
-      </div>`;
-    }).join('');
-  }
-
-  // Repos alerts
-  const reposEl=document.getElementById('dash-repos');
-  if(repos_list.length===0){
-    reposEl.innerHTML='<div class="dash-empty">✅ Tous les repos sont conformes</div>';
-  } else {
-    reposEl.innerHTML=repos_list.map(({c,repos,heureFin,heureReco})=>{
-      const h=Math.floor(repos/60),m=repos%60;
-      return`<div class="alert-card a-amber">
-        <span class="alert-icon">🟠</span>
-        <div><div class="alert-name">${c.nom}</div><div class="alert-detail">Fin ${heureFin} → Reco ${heureReco}</div></div>
-        <span class="alert-badge">${h}h${String(m).padStart(2,'0')}</span>
-      </div>`;
-    }).join('');
-  }
-
-  // Non pointés
-  const npEl=document.getElementById('dash-nonpointes');
-  if(nonPointes.length===0){
-    npEl.innerHTML='<div class="dash-empty">✅ Tous les chauffeurs sont pointés</div>';
-  } else {
-    npEl.innerHTML=nonPointes.slice(0,20).map(c=>`
-      <div class="alert-card" style="border-left-color:var(--g200)">
-        <span class="alert-icon">⚪</span>
-        <div><div class="alert-name">${c.nom}</div><div class="alert-detail">${c.affectation}</div></div>
-      </div>`).join('')+(nonPointes.length>20?`<div class="dash-empty">+ ${nonPointes.length-20} autres</div>`:'');
-  }
-}
-
-// Fix repos_list scope
-var repos_list=[];
-
+function changeCoord(){const v=document.getElementById('new-coord').value.trim();if(!v)return;state.coordinator=v;document.getElementById('ctx-name').textContent=v;closeModal('modal-coord');document.getElementById('new-coord').value='';showToast('Coordinateur : '+v)}
 let tt;
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2200)}
 document.getElementById('screen-setup').classList.add('active');

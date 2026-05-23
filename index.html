@@ -709,6 +709,29 @@ function handlePhoto(id,input){
   };
   reader.readAsDataURL(input.files[0]);
 }
+const SHEET_URL='https://script.google.com/macros/s/AKfycbySTEpB7xAYELRwZ7ISz3aaBWAu6eshlCS5XnquTiEZXRTzfo9aUfmKyeX_B5IqpSeCWA/exec';
+
+function sendToSheet(id){
+  const d=getData(id),c=CHAUFFEURS.find(x=>x.id===id);
+  if(!d.heureDebut&&!d.heureFin)return;
+  const payload={
+    date:dateKey(state.currentDate),
+    site:state.site,
+    coordinator:state.coordinator,
+    id:c.id,
+    nom:c.nom,
+    affectation:c.affectation,
+    heureDebut:d.heureDebut||'',
+    kmDepart:d.kmDepart||'',
+    heureFin:d.heureFin||'',
+    kmRetour:d.kmRetour||''
+  };
+  fetch(SHEET_URL,{method:'POST',body:JSON.stringify(payload)})
+    .then(r=>r.json())
+    .then(r=>{if(r.status==='ok')showToast('✓ Synchronisé avec Google Sheets')})
+    .catch(()=>showToast('⚠️ Hors ligne — données sauvegardées localement'));
+}
+
 function saveDriver(id){
   autosave(id);
   const d=getData(id),c=CHAUFFEURS.find(x=>x.id===id),complete=d.heureDebut&&d.heureFin;
@@ -716,7 +739,9 @@ function saveDriver(id){
   if(card){card.className=`driver-card${complete?' complete':d.heureDebut?' has-data':''} open`;const av=card.querySelector('.driver-avatar');if(av){av.className=`driver-avatar${complete?' complete':d.heureDebut?' filled':''}`;av.textContent=complete?'✓':initials(c.nom)}}
   const btn=document.getElementById('savebtn-'+id);
   if(btn){btn.className='btn-save'+(complete?' saved':'');btn.innerHTML=complete?'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Enregistré':'Enregistrer'}
-  updateStats();showToast(`✓ ${c.nom.split(' ')[0]} enregistré`);
+  updateStats();
+  showToast(`✓ ${c.nom.split(' ')[0]} enregistré`);
+  sendToSheet(id);
 }
 function filterDrivers(){state.openCard=null;renderDrivers()}
 

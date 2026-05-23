@@ -169,6 +169,56 @@ input[type=file]{display:none}
 .modal-input{width:100%;padding:13px 14px;border:1.5px solid var(--g200);border-radius:var(--rsm);font-family:var(--font);font-size:15px;color:var(--g800);background:var(--off);outline:none;-webkit-appearance:none;margin-bottom:12px}
 .modal-input:focus{border-color:var(--navy);box-shadow:0 0 0 3px rgba(27,58,107,.1);background:white}
 .btn-modal-primary{width:100%;padding:13px;background:var(--navy);color:white;border:none;border-radius:var(--rsm);font-family:var(--syne);font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.02em}
+
+/* ══ DASHBOARD ══ */
+.tab-bar{display:flex;background:var(--navy-dark);border-top:1px solid rgba(255,255,255,.08)}
+.tab-btn{flex:1;padding:10px 0 14px;border:none;background:none;font-family:var(--font);font-size:11px;font-weight:600;color:rgba(255,255,255,.4);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;transition:color .15s;letter-spacing:.03em}
+.tab-btn svg{opacity:.5;transition:opacity .15s}
+.tab-btn.active{color:white}
+.tab-btn.active svg{opacity:1}
+.tab-btn.active .tab-indicator{background:var(--red)}
+.tab-indicator{width:20px;height:2px;border-radius:2px;background:transparent;margin-top:2px;transition:background .15s}
+
+#screen-dashboard{display:none;padding:12px 13px 100px;max-width:520px;margin:0 auto}
+#screen-dashboard.active{display:block}
+
+.dash-header{font-family:var(--syne);font-size:16px;font-weight:700;color:var(--navy);margin-bottom:14px}
+.dash-date{font-size:11px;color:var(--g400);font-weight:400;margin-left:6px}
+
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.kpi-card{background:white;border-radius:var(--r);padding:14px;box-shadow:0 1px 6px rgba(27,58,107,.07);border-left:3px solid transparent}
+.kpi-card.k-blue{border-left-color:var(--navy)}
+.kpi-card.k-green{border-left-color:var(--success)}
+.kpi-card.k-red{border-left-color:var(--red)}
+.kpi-card.k-amber{border-left-color:#e67e22}
+.kpi-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.kpi-num{font-family:var(--syne);font-size:26px;font-weight:800;color:var(--navy);line-height:1}
+.kpi-card.k-green .kpi-num{color:var(--success)}
+.kpi-card.k-red .kpi-num{color:var(--red)}
+.kpi-card.k-amber .kpi-num{color:#e67e22}
+.kpi-label{font-size:10px;color:var(--g400);font-weight:600;letter-spacing:.05em;text-transform:uppercase}
+.kpi-bar-bg{height:4px;background:var(--g100);border-radius:2px;overflow:hidden}
+.kpi-bar-fill{height:100%;border-radius:2px;transition:width .5s ease}
+.k-blue .kpi-bar-fill{background:var(--navy)}
+.k-green .kpi-bar-fill{background:var(--success)}
+
+.dash-section{font-family:var(--syne);font-size:11px;font-weight:700;color:var(--g400);letter-spacing:.08em;text-transform:uppercase;margin:16px 0 8px;display:flex;align-items:center;gap:6px}
+.dash-section::after{content:'';flex:1;height:1px;background:var(--g200)}
+
+.alert-card{background:white;border-radius:var(--r);padding:11px 13px;box-shadow:0 1px 6px rgba(27,58,107,.06);margin-bottom:6px;display:flex;align-items:center;gap:10px;border-left:3px solid transparent}
+.alert-card.a-red{border-left-color:var(--red)}
+.alert-card.a-amber{border-left-color:#e67e22}
+.alert-icon{font-size:18px;flex-shrink:0}
+.alert-name{font-size:13px;font-weight:600;color:var(--g800)}
+.alert-detail{font-size:11px;color:var(--g400);margin-top:1px}
+.alert-badge{margin-left:auto;font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;white-space:nowrap}
+.a-red .alert-badge{background:#fdecea;color:var(--red)}
+.a-amber .alert-badge{background:#fff3e0;color:#e67e22}
+
+.dash-empty{text-align:center;padding:20px;color:var(--g400);font-size:13px;background:white;border-radius:var(--r);box-shadow:0 1px 6px rgba(27,58,107,.06)}
+
+/* Alert icons on driver cards */
+.driver-alerts{display:flex;gap:3px;margin-left:4px}
 </style>
 </head>
 <body>
@@ -289,12 +339,73 @@ input[type=file]{display:none}
     <div id="no-results" class="no-results" style="display:none">Aucun chauffeur trouvé</div>
   </div>
 
-  <div class="bottom-bar">
-    <button class="btn-sm" onclick="openModal('modal-site')">🅿️ Site</button>
-    <button class="btn-sm" onclick="openModal('modal-coord')">👤 Coordinateur</button>
-    <div style="flex:1"></div>
-    <div style="font-size:11px;color:var(--g400)" id="bottom-info">—</div>
+  <!-- TAB BAR -->
+  <div class="tab-bar" style="position:fixed;bottom:0;left:0;right:0;z-index:100">
+    <button class="tab-btn active" id="tab-list" onclick="switchTab('list')">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      Liste
+      <div class="tab-indicator"></div>
+    </button>
+    <button class="tab-btn" id="tab-dash" onclick="switchTab('dash')">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="7" height="9" rx="1"/><rect x="15" y="3" width="7" height="5" rx="1"/><rect x="15" y="12" width="7" height="9" rx="1"/><rect x="2" y="16" width="7" height="5" rx="1"/></svg>
+      Dashboard
+      <div class="tab-indicator"></div>
+    </button>
+    <button class="tab-btn" id="tab-settings" onclick="openModal('modal-settings')">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      Réglages
+      <div class="tab-indicator"></div>
+    </button>
   </div>
+</div>
+
+<!-- DASHBOARD SCREEN -->
+<div id="screen-dashboard">
+  <div class="dash-header">
+    Tableau de bord <span class="dash-date" id="dash-date-label">—</span>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card k-green">
+      <div class="kpi-top">
+        <div class="kpi-num" id="kpi-debut">0</div>
+        <span style="font-size:20px">🟢</span>
+      </div>
+      <div class="kpi-label">Début saisi</div>
+      <div class="kpi-bar-bg" style="margin-top:8px"><div class="kpi-bar-fill k-green" id="bar-debut" style="width:0%"></div></div>
+    </div>
+    <div class="kpi-card k-blue">
+      <div class="kpi-top">
+        <div class="kpi-num" id="kpi-fin">0</div>
+        <span style="font-size:20px">🔵</span>
+      </div>
+      <div class="kpi-label">Fin saisie</div>
+      <div class="kpi-bar-bg" style="margin-top:8px"><div class="kpi-bar-fill k-blue" id="bar-fin" style="width:0%"></div></div>
+    </div>
+    <div class="kpi-card k-red">
+      <div class="kpi-top">
+        <div class="kpi-num" id="kpi-nonpointes">0</div>
+        <span style="font-size:20px">⚪</span>
+      </div>
+      <div class="kpi-label">Non pointés</div>
+    </div>
+    <div class="kpi-card k-amber">
+      <div class="kpi-top">
+        <div class="kpi-num" id="kpi-alertes">0</div>
+        <span style="font-size:20px">⚠️</span>
+      </div>
+      <div class="kpi-label">Alertes</div>
+    </div>
+  </div>
+
+  <div class="dash-section">⏱ Amplitude > 12h</div>
+  <div id="dash-amplitude"></div>
+
+  <div class="dash-section">😴 Repos < 9h</div>
+  <div id="dash-repos"></div>
+
+  <div class="dash-section">⚪ Non pointés aujourd'hui</div>
+  <div id="dash-nonpointes"></div>
 </div>
 
 <div class="modal-overlay" id="modal-site" onclick="closeMO(event,'modal-site')">
@@ -317,6 +428,17 @@ input[type=file]{display:none}
 </div>
 
 <div class="toast" id="toast"></div>
+
+<!-- MODAL SETTINGS -->
+<div class="modal-overlay" id="modal-settings" onclick="closeMO(event,'modal-settings')">
+  <div class="modal-sheet">
+    <div class="modal-title">Réglages</div>
+    <button class="modal-btn" onclick="closeModal('modal-settings');openModal('modal-site')"><span class="micon">🅿️</span>Changer de site</button>
+    <button class="modal-btn" onclick="closeModal('modal-settings');openModal('modal-coord')"><span class="micon">👤</span>Changer de coordinateur</button>
+    <button class="modal-btn" onclick="closeModal('modal-settings');exportExcel()"><span class="micon">📥</span>Export Excel</button>
+    <button class="modal-cancel" onclick="closeModal('modal-settings')">Fermer</button>
+  </div>
+</div>
 
 <script>
 const SHEET_URL='https://script.google.com/macros/s/AKfycbySTEpB7xAYELRwZ7ISz3aaBWAu6eshlCS5XnquTiEZXRTzfo9aUfmKyeX_B5IqpSeCWA/exec';
@@ -456,7 +578,7 @@ function renderDrivers(){
     <div class="driver-avatar ${avCls}">${avTxt}</div>
     <div><div class="driver-name">${c.nom}</div><div class="driver-aff">${c.affectation}</div></div>
   </div>
-  <div class="driver-right">${tbD}${tbF}<span class="chevron">▾</span></div>
+  <div class="driver-right">${tbD}${tbF}<span class="driver-alerts">${alertIcons(c.id)}</span><span class="chevron">▾</span></div>
 </div>
 <div class="driver-form">
   <div class="sec-divider">Prise de service</div>
@@ -580,6 +702,126 @@ function changeCoord(){
   state.coordinator=v;document.getElementById('ctx-name').textContent=v;
   closeModal('modal-coord');document.getElementById('new-coord').value='';showToast('Coordinateur : '+v);
 }
+
+// ══ TAB SWITCHING ══
+function switchTab(tab){
+  document.getElementById('tab-list').classList.toggle('active', tab==='list');
+  document.getElementById('tab-dash').classList.toggle('active', tab==='dash');
+  document.getElementById('tab-settings').classList.toggle('active', tab==='settings');
+  document.getElementById('drivers-list').closest('.main-content').style.display = tab==='list'?'block':'none';
+  document.querySelector('.search-wrap').style.display = tab==='list'?'block':'none';
+  document.querySelector('.stats-row').style.display = tab==='list'?'grid':'none';
+  document.getElementById('screen-dashboard').classList.toggle('active', tab==='dash');
+  if(tab==='dash') renderDashboard();
+}
+
+// ══ ALERT ICONS ON CARDS ══
+function alertIcons(id){
+  const d=getData(id);
+  let icons='';
+  if(d.heureDebut&&d.heureFin){
+    const diff=timeToMins(d.heureFin)-timeToMins(d.heureDebut);
+    if(diff>12*60) icons+='<span title="Amplitude > 12h" style="font-size:13px">🔴</span>';
+  }
+  if(d.heureFin&&d.heureReco){
+    const repos=timeToMins(d.heureReco)-timeToMins(d.heureFin);
+    const reposAdj=repos<0?repos+24*60:repos;
+    if(reposAdj<9*60) icons+='<span title="Repos < 9h" style="font-size:13px">🟠</span>';
+  }
+  return icons;
+}
+
+function timeToMins(t){
+  if(!t||typeof t!=='string'||!t.includes(':'))return 0;
+  const[h,m]=t.split(':').map(Number);
+  return h*60+m;
+}
+
+// ══ DASHBOARD ══
+function renderDashboard(){
+  const f=fmtDate(state.currentDate);
+  document.getElementById('dash-date-label').textContent=f.full;
+
+  let debut=0,fin=0,amplitude=[],nonPointes=[];repos_list=[];
+  const total=CHAUFFEURS.length;
+
+  CHAUFFEURS.forEach(c=>{
+    const d=getData(c.id);
+    if(d.heureDebut) debut++;
+    if(d.heureFin) fin++;
+
+    // Non pointés
+    if(!d.heureDebut) nonPointes.push(c);
+
+    // Amplitude > 12h
+    if(d.heureDebut&&d.heureFin){
+      let diff=timeToMins(d.heureFin)-timeToMins(d.heureDebut);
+      if(diff<0) diff+=24*60;
+      if(diff>12*60) amplitude.push({c,diff,heureDebut:d.heureDebut,heureFin:d.heureFin});
+    }
+
+    // Repos < 9h
+    if(d.heureFin&&d.heureReco){
+      let repos=timeToMins(d.heureReco)-timeToMins(d.heureFin);
+      if(repos<0) repos+=24*60;
+      if(repos<9*60) repos_list.push({c,repos,heureFin:d.heureFin,heureReco:d.heureReco});
+    }
+  });
+
+  // KPIs
+  document.getElementById('kpi-debut').textContent=debut+'/'+total;
+  document.getElementById('kpi-fin').textContent=fin+'/'+total;
+  document.getElementById('kpi-nonpointes').textContent=nonPointes.length;
+  document.getElementById('kpi-alertes').textContent=amplitude.length+repos_list.length;
+  document.getElementById('bar-debut').style.width=(debut/total*100)+'%';
+  document.getElementById('bar-fin').style.width=(fin/total*100)+'%';
+
+  // Amplitude alerts
+  const ampEl=document.getElementById('dash-amplitude');
+  if(amplitude.length===0){
+    ampEl.innerHTML='<div class="dash-empty">✅ Aucune amplitude dépassée</div>';
+  } else {
+    ampEl.innerHTML=amplitude.map(({c,diff,heureDebut,heureFin})=>{
+      const h=Math.floor(diff/60),m=diff%60;
+      return`<div class="alert-card a-red">
+        <span class="alert-icon">🔴</span>
+        <div><div class="alert-name">${c.nom}</div><div class="alert-detail">${heureDebut} → ${heureFin}</div></div>
+        <span class="alert-badge">${h}h${String(m).padStart(2,'0')}</span>
+      </div>`;
+    }).join('');
+  }
+
+  // Repos alerts
+  const reposEl=document.getElementById('dash-repos');
+  if(repos_list.length===0){
+    reposEl.innerHTML='<div class="dash-empty">✅ Tous les repos sont conformes</div>';
+  } else {
+    reposEl.innerHTML=repos_list.map(({c,repos,heureFin,heureReco})=>{
+      const h=Math.floor(repos/60),m=repos%60;
+      return`<div class="alert-card a-amber">
+        <span class="alert-icon">🟠</span>
+        <div><div class="alert-name">${c.nom}</div><div class="alert-detail">Fin ${heureFin} → Reco ${heureReco}</div></div>
+        <span class="alert-badge">${h}h${String(m).padStart(2,'0')}</span>
+      </div>`;
+    }).join('');
+  }
+
+  // Non pointés
+  const npEl=document.getElementById('dash-nonpointes');
+  if(nonPointes.length===0){
+    npEl.innerHTML='<div class="dash-empty">✅ Tous les chauffeurs sont pointés</div>';
+  } else {
+    npEl.innerHTML=nonPointes.slice(0,20).map(c=>`
+      <div class="alert-card" style="border-left-color:var(--g200)">
+        <span class="alert-icon">⚪</span>
+        <div><div class="alert-name">${c.nom}</div><div class="alert-detail">${c.affectation}</div></div>
+      </div>`).join('')+(nonPointes.length>20?`<div class="dash-empty">+ ${nonPointes.length-20} autres</div>`:'');
+  }
+}
+
+// Fix repos_list scope
+var repos_list=[];
+
 let tt;
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2200)}
 document.getElementById('screen-setup').classList.add('active');

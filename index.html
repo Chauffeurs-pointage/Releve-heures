@@ -599,14 +599,37 @@ function checkSetup(){
   document.getElementById('btn-start').disabled=!(document.getElementById('setup-name').value.trim()&&state.site);
 }
 function startApp(){
-  state.coordinator=document.getElementById('setup-name').value.trim();
-  document.getElementById('ctx-site').textContent=state.site;
-  document.getElementById('ctx-name').textContent=state.coordinator;
-  document.getElementById('h-site-sub').textContent=state.site;
-  updateDateLabel();renderDrivers();
-  document.getElementById('screen-setup').classList.remove('active');
-  document.getElementById('screen-main').classList.add('active');
+  state.coordinator=document.getElementById("setup-name").value.trim();
+  document.getElementById("ctx-site").textContent=state.site;
+  document.getElementById("ctx-name").textContent=state.coordinator;
+  document.getElementById("h-site-sub").textContent=state.site;
+  document.getElementById("screen-setup").classList.remove("active");
+  document.getElementById("screen-main").classList.add("active");
+  updateDateLabel();
+  loadFromSheet();
 }
+
+function loadFromSheet(){
+  document.getElementById("drivers-list").innerHTML=`<div style="text-align:center;padding:32px 20px;color:var(--g400)"><div style="font-size:13px;margin-bottom:6px">Chargement des données2026</div></div>`;
+  fetch(SHEET_URL)
+    .then(r=>r.json())
+    .then(res=>{
+      if(res.status==="ok"&&res.data){
+        state.data={};
+        res.data.forEach(row=>{
+          if(!row.nom)return;
+          const chauffeur=CHAUFFEURS.find(c=>c.nom===row.nom||c.id===parseInt(row.id));
+          if(!chauffeur)return;
+          const key=`${chauffeur.id}_${row.date}`;
+          state.data[key]={heureDebut:row.heureDebut||"",kmDepart:row.kmDepart||"",heureFin:row.heureFin||"",kmRetour:row.kmRetour||""};
+        });
+        showToast("2713 Donn00e9es synchronis00e9es");
+      }
+      renderDrivers();
+    })
+    .catch(()=>{showToast("26a0Fe0f Hors ligne");renderDrivers();});
+}
+
 
 // DATE
 function fmtDate(d){
@@ -620,8 +643,8 @@ function updateDateLabel(){
   document.getElementById('date-label').textContent=isToday?`Aujourd'hui · ${f.day}`:f.day;
   document.getElementById('date-sub').textContent=f.full;
 }
-function changeDate(d){state.currentDate.setDate(state.currentDate.getDate()+d);updateDateLabel();state.openCard=null;renderDrivers()}
-function goToday(){state.currentDate=new Date();updateDateLabel();state.openCard=null;renderDrivers()}
+function changeDate(d){state.currentDate.setDate(state.currentDate.getDate()+d);updateDateLabel();state.openCard=null;loadFromSheet();}
+function goToday(){state.currentDate=new Date();updateDateLabel();state.openCard=null;loadFromSheet();}
 function getKey(id){return`${id}_${dateKey(state.currentDate)}`}
 function getData(id){return state.data[getKey(id)]||{}}
 function initials(n){const p=n.split(' ').filter(x=>x.length>1);return p.length>=2?(p[0][0]+p[p.length-1][0]).toUpperCase():n.substring(0,2).toUpperCase()}

@@ -722,13 +722,41 @@ function handlePhoto(id,input){
   if(!input.files||!input.files[0])return;
   const reader=new FileReader();
   reader.onload=e=>{
-    const data=e.target.result;
+    const photoData=e.target.result;
     if(!state.data[getKey(id)])state.data[getKey(id)]={};
-    state.data[getKey(id)].photo=data;
+    state.data[getKey(id)].photo=photoData;
     const btn=document.getElementById('photobtn-'+id),img=document.getElementById('photoimg-'+id);
-    if(btn){btn.innerHTML=`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg> 📎 Photo jointe — changer`;btn.classList.add('has-photo')}
-    if(img){img.src=data;img.classList.add('visible')}
-    showToast('Photo enregistrée ✓');
+    if(btn){btn.innerHTML=`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg> 📎 Envoi en cours…`;btn.classList.add('has-photo')}
+    if(img){img.src=photoData;img.classList.add('visible')}
+    // Envoie la photo vers Google Drive
+    const c=CHAUFFEURS.find(x=>x.id===id);
+    fetch(SHEET_URL,{
+      method:'POST',
+      body:JSON.stringify({
+        type:'photo',
+        photo:photoData,
+        date:dateKey(state.currentDate),
+        site:state.site,
+        coordinator:state.coordinator,
+        id:c.id,
+        nom:c.nom
+      })
+    })
+    .then(r=>r.json())
+    .then(res=>{
+      if(res.status==='ok'){
+        state.data[getKey(id)].photoUrl=res.url;
+        if(btn)btn.innerHTML=`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg> 📎 Photo enregistrée sur Drive`;
+        showToast('✓ Photo sauvegardée sur Drive');
+      } else {
+        if(btn)btn.innerHTML=`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg> 📎 Photo jointe (local)`;
+        showToast('Photo sauvegardée localement');
+      }
+    })
+    .catch(()=>{
+      if(btn)btn.innerHTML=`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg> 📎 Photo jointe (hors ligne)`;
+      showToast('⚠️ Hors ligne — photo locale uniquement');
+    });
   };
   reader.readAsDataURL(input.files[0]);
 }

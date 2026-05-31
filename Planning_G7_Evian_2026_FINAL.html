@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Planning G7 Évian 2026 · Chabé</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:#0C2340; --navy2:#1A3A5C; --navy3:#081828;
+  --gold:#C8956C; --gold2:#F0C89A; --gold3:#FDE8C8;
+  --white:#FFFFFF; --bg:#F4F2EE; --bg2:#ECEAE4; --line:#D8D5CE;
+
+  --ph-transit-bg:#DDDBD4; --ph-transit-fg:#5A5855;
+  --ph-install-bg:#1558A0; --ph-install-fg:#fff;
+  --ph-ops-bg:#287A2E;     --ph-ops-fg:#fff;
+  --ph-veille-bg:#B86E00;  --ph-veille-fg:#fff;
+  --ph-g7-bg:#0C2340;      --ph-g7-fg:#F0C89A;
+  --ph-debrief-bg:#7A1040; --ph-debrief-fg:#fff;
+
+  --c-clara:#C8356A;   --c-clara-bg:#FBE8F2;   --c-clara-dk:#6B0F3A;
+  --c-pierre:#1A5FAA;  --c-pierre-bg:#E0EBF7;  --c-pierre-dk:#0C2E5A;
+  --c-william:#2172B8; --c-william-bg:#D8E8F5; --c-william-dk:#0A2648;
+  --c-pauline:#2E8034; --c-pauline-bg:#D8EDD8; --c-pauline-dk:#174A1A;
+  --c-eric:#3A8C44;    --c-eric-bg:#CCEACD;    --c-eric-dk:#124016;
+  --c-nordine:#B87000; --c-nordine-bg:#FDE8C8; --c-nordine-dk:#5C3000;
+  --c-riles:#A86800;   --c-riles-bg:#FAE0C0;   --c-riles-dk:#4A2800;
+  --c-general:#555;    --c-general-bg:#EBEBEB;  --c-general-dk:#222;
+  --c-hilton:#1A5FAA;  --c-hilton-bg:#D6E8F7;  --c-hilton-dk:#0B2E5A;
+  --c-odalys:#2E8034;  --c-odalys-bg:#D5EDD8;  --c-odalys-dk:#174A1A;
+  --c-japon:#B87000;   --c-japon-bg:#FDE8C8;   --c-japon-dk:#5C3000;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--navy);min-height:100vh}
+
+/* ── TOPBAR ── */
+.topbar{background:var(--navy3);padding:0 1.5rem;display:flex;align-items:center;
+  justify-content:space-between;height:54px;position:sticky;top:0;z-index:200;
+  border-bottom:2px solid var(--gold)}
+.tb-left{display:flex;align-items:center;gap:1rem}
+.tb-logo{font-family:'DM Serif Display',serif;font-size:16px;color:var(--gold);letter-spacing:.04em}
+.tb-title{font-size:11px;color:rgba(255,255,255,.45);font-weight:300;letter-spacing:.06em;text-transform:uppercase}
+.tb-right{display:flex;align-items:center;gap:8px}
+.view-toggle{display:flex;gap:3px;background:rgba(255,255,255,.08);border-radius:7px;padding:3px}
+.view-btn{font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;padding:4px 13px;
+  border:none;border-radius:5px;cursor:pointer;background:transparent;color:rgba(255,255,255,.45);
+  transition:all .18s;letter-spacing:.03em}
+.view-btn.active{background:var(--gold);color:var(--navy)}
+
+/* ── EDIT PIN MODAL ── */
+.pin-overlay{display:none;position:fixed;inset:0;background:rgba(8,24,40,.75);
+  z-index:500;backdrop-filter:blur(6px);align-items:center;justify-content:center}
+.pin-overlay.open{display:flex}
+.pin-box{background:#fff;border-radius:14px;padding:32px;width:320px;text-align:center;
+  box-shadow:0 24px 60px rgba(0,0,0,.3)}
+.pin-title{font-family:'DM Serif Display',serif;font-size:20px;color:var(--navy);margin-bottom:6px}
+.pin-sub{font-size:12px;color:#999;margin-bottom:22px}
+.pin-input{width:100%;font-family:'DM Mono',monospace;font-size:22px;text-align:center;
+  letter-spacing:.3em;border:2px solid var(--line);border-radius:8px;padding:12px;
+  outline:none;transition:border .15s;color:var(--navy)}
+.pin-input:focus{border-color:var(--gold)}
+.pin-error{font-size:12px;color:#E05050;margin-top:8px;height:16px}
+.pin-btn{margin-top:16px;width:100%;font-family:'DM Sans',sans-serif;font-size:13px;
+  font-weight:600;padding:11px;border:none;border-radius:8px;background:var(--navy);
+  color:#fff;cursor:pointer;transition:all .18s}
+.pin-btn:hover{background:var(--gold);color:var(--navy)}
+.pin-cancel{margin-top:10px;font-size:12px;color:#AAA;cursor:pointer;
+  background:none;border:none;font-family:'DM Sans',sans-serif}
+.pin-cancel:hover{color:var(--navy)}
+
+/* ── EDIT BUTTON ── */
+.edit-btn{font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;
+  padding:5px 14px;border-radius:6px;border:1.5px solid var(--gold);
+  background:transparent;color:var(--gold);cursor:pointer;transition:all .18s}
+.edit-btn.on{background:var(--gold);color:var(--navy)}
+.edit-indicator{font-size:10px;color:var(--gold2);opacity:0;transition:opacity .3s;white-space:nowrap}
+.edit-indicator.visible{opacity:1}
+
+/* ── FILTER BAR ── */
+.filter-bar{background:var(--navy2);padding:8px 1.5rem;display:flex;
+  align-items:center;gap:7px;flex-wrap:wrap;border-bottom:1px solid rgba(255,255,255,.06)}
+.filter-label{font-size:10px;text-transform:uppercase;letter-spacing:.08em;
+  color:rgba(255,255,255,.35);margin-right:2px;white-space:nowrap}
+.pf-btn{font-family:'DM Mono',monospace;font-size:11px;padding:4px 11px;border-radius:99px;
+  border:1.5px solid rgba(255,255,255,.15);cursor:pointer;transition:all .15s;font-weight:500;
+  background:rgba(255,255,255,.06);color:rgba(255,255,255,.5)}
+.pf-btn.active{color:#fff}
+.pf-btn[data-p="all"].active{background:var(--gold);border-color:var(--gold);color:var(--navy)}
+
+/* ── LOADING ── */
+.loading-bar{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--gold);
+  z-index:300;transform:scaleX(0);transform-origin:left;transition:transform .4s ease;opacity:0}
+.loading-bar.active{opacity:1;animation:loadpulse 1.2s ease infinite}
+@keyframes loadpulse{0%{transform:scaleX(0)}50%{transform:scaleX(.7)}100%{transform:scaleX(1)}}
+.sync-badge{font-size:10px;padding:3px 9px;border-radius:99px;background:rgba(255,255,255,.08);
+  color:rgba(255,255,255,.4);font-family:'DM Mono',monospace;transition:all .3s}
+.sync-badge.ok{color:#6ECF7A;background:rgba(110,207,122,.12)}
+.sync-badge.err{color:#E07070;background:rgba(224,112,112,.12)}
+.sync-badge.loading{color:var(--gold);background:rgba(200,149,108,.12)}
+
+/* ── MAIN ── */
+main{padding:1.25rem 1.5rem 4rem}
+
+/* ── GANTT ── */
+.gantt-wrap{overflow-x:auto;border-radius:10px;box-shadow:0 2px 12px rgba(0,0,0,.08)}
+.gantt-table{width:100%;min-width:1300px;border-collapse:separate;border-spacing:0}
+.gantt-table thead th{position:sticky;top:98px;z-index:10;padding:9px 7px;font-size:10px;
+  font-weight:600;text-align:center;white-space:nowrap;letter-spacing:.04em}
+.gantt-table thead th.lbl-col{left:0;z-index:20;background:var(--navy);color:var(--gold2);
+  font-family:'DM Serif Display',serif;font-size:12px;width:140px;min-width:140px;
+  text-align:left;padding-left:14px;border-bottom:2px solid var(--gold)}
+.gantt-table thead th.day-col{min-width:118px;border-bottom:2px solid transparent}
+.ph-transit th.day-col{background:var(--ph-transit-bg);color:var(--ph-transit-fg)}
+.ph-install th.day-col{background:var(--ph-install-bg);color:var(--ph-install-fg)}
+.ph-ops     th.day-col{background:var(--ph-ops-bg);color:var(--ph-ops-fg)}
+.ph-veille  th.day-col{background:var(--ph-veille-bg);color:var(--ph-veille-fg)}
+.ph-g7      th.day-col{background:var(--ph-g7-bg);color:var(--ph-g7-fg);border-bottom-color:var(--gold)}
+.ph-debrief th.day-col{background:var(--ph-debrief-bg);color:var(--ph-debrief-fg)}
+.ph-label{display:block;font-size:8px;font-weight:400;opacity:.75;margin-top:2px;
+  text-transform:uppercase;letter-spacing:.05em}
+
+.lbl-cell{position:sticky;left:0;z-index:5;width:140px;min-width:140px;padding:10px 12px;
+  vertical-align:middle}
+.lbl-inner .lbl-name{font-family:'DM Serif Display',serif;font-size:12px;color:#fff}
+.lbl-inner .lbl-members{font-size:10px;color:rgba(255,255,255,.65);margin-top:2px}
+
+.task-cell{padding:7px 7px;vertical-align:top;font-size:10px;line-height:1.5;
+  border:1px solid rgba(0,0,0,.05);min-height:90px;transition:outline .1s;cursor:default}
+.task-cell.editable:hover{outline:2px dashed var(--gold);outline-offset:-2px;cursor:pointer}
+.task-cell.empty{opacity:.25}
+
+.ti{display:flex;gap:5px;align-items:flex-start;margin-bottom:4px}
+.tt{font-family:'DM Mono',monospace;font-size:9px;font-weight:500;white-space:nowrap;
+  padding:1px 5px;border-radius:3px;margin-top:1px;flex-shrink:0}
+.tx{flex:1;font-size:10px}
+.tbullet{font-size:10px;margin-top:2px;flex-shrink:0}
+
+/* ── LIST VIEW ── */
+.list-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem}
+.pcard{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.07);
+  transition:box-shadow .2s}
+.pcard:hover{box-shadow:0 4px 20px rgba(0,0,0,.12)}
+.pcard-hd{padding:15px 17px;display:flex;align-items:center;gap:11px}
+.pavatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-family:'DM Serif Display',serif;font-size:15px;color:#fff;flex-shrink:0}
+.pcard-name{font-family:'DM Serif Display',serif;font-size:15px}
+.pcard-role{font-size:11px;opacity:.55;margin-top:1px}
+.pdays{padding:0 16px 16px}
+.pday-row{display:flex;gap:10px;padding:7px 0;border-bottom:1px solid #F0EDE8;align-items:flex-start}
+.pday-row:last-child{border-bottom:none}
+.pday-row.editable:hover .pday-tasks{outline:2px dashed var(--gold);outline-offset:3px;
+  border-radius:4px;cursor:pointer}
+.dbadge{min-width:52px;text-align:center;flex-shrink:0}
+.dbadge-date{font-family:'DM Mono',monospace;font-size:9px;font-weight:500;padding:3px 6px;
+  border-radius:5px;display:inline-block;line-height:1.4}
+.dbadge-dow{font-size:9px;color:#AAA;margin-top:2px;text-align:center}
+.pday-tasks{flex:1;min-width:0}
+.pday-ti{font-size:11px;line-height:1.5;display:flex;gap:6px;margin-bottom:3px}
+.pday-th{font-family:'DM Mono',monospace;font-size:10px;font-weight:500;white-space:nowrap;flex-shrink:0}
+.notask{font-size:11px;color:#CCC;font-style:italic}
+
+/* phase colors for badges */
+.ph-transit .dbadge-date{background:var(--ph-transit-bg);color:var(--ph-transit-fg)}
+.ph-install .dbadge-date{background:var(--ph-install-bg);color:var(--ph-install-fg)}
+.ph-ops     .dbadge-date{background:var(--ph-ops-bg);color:var(--ph-ops-fg)}
+.ph-veille  .dbadge-date{background:var(--ph-veille-bg);color:var(--ph-veille-fg)}
+.ph-g7      .dbadge-date{background:var(--ph-g7-bg);color:var(--ph-g7-fg)}
+.ph-debrief .dbadge-date{background:var(--ph-debrief-bg);color:var(--ph-debrief-fg)}
+
+/* ── EDIT MODAL ── */
+.edit-overlay{display:none;position:fixed;inset:0;background:rgba(8,24,40,.7);
+  z-index:400;backdrop-filter:blur(5px);align-items:center;justify-content:center}
+.edit-overlay.open{display:flex}
+.edit-modal{background:#fff;border-radius:14px;padding:26px;width:540px;max-width:94vw;
+  max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.em-hd{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px}
+.em-title{font-family:'DM Serif Display',serif;font-size:18px;color:var(--navy)}
+.em-sub{font-size:11px;color:#999;margin-top:3px}
+.em-close{background:none;border:none;font-size:20px;cursor:pointer;color:#BBB;
+  padding:2px 6px;line-height:1;border-radius:4px}
+.em-close:hover{color:var(--navy);background:#F5F5F5}
+.task-rows{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.task-row{display:flex;gap:8px;align-items:center;background:#F7F6F2;
+  border-radius:8px;padding:8px 10px;animation:fadeIn .15s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.task-row input{font-family:'DM Mono',monospace;font-size:11px;border:1.5px solid #DDD;
+  border-radius:6px;padding:6px 9px;background:#fff;color:var(--navy);outline:none;transition:border .15s}
+.task-row input:focus{border-color:var(--gold)}
+.inp-time{width:76px;flex-shrink:0}
+.inp-text{flex:1}
+.del-btn{background:none;border:none;cursor:pointer;color:#CCC;font-size:18px;
+  line-height:1;padding:2px 5px;transition:color .15s;flex-shrink:0;border-radius:4px}
+.del-btn:hover{color:#E05050;background:#FEF0F0}
+.add-task-btn{font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;
+  padding:8px 14px;border-radius:7px;border:1.5px dashed #CCC;background:transparent;
+  color:#888;cursor:pointer;width:100%;transition:all .15s;text-align:center}
+.add-task-btn:hover{border-color:var(--gold);color:var(--gold);background:#FDF8F4}
+.em-scope{margin-bottom:14px;padding:10px 12px;background:#F7F6F2;border-radius:8px;
+  display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.em-scope-label{font-size:11px;color:#666;font-weight:500}
+.scope-btn{font-size:11px;padding:3px 10px;border-radius:5px;border:1.5px solid #DDD;
+  background:#fff;cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif}
+.scope-btn.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+.em-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:18px;
+  padding-top:14px;border-top:1px solid #EEE}
+.btn-cancel{font-family:'DM Sans',sans-serif;font-size:12px;padding:8px 18px;
+  border-radius:7px;border:1px solid #DDD;background:#fff;color:#666;cursor:pointer;transition:all .15s}
+.btn-cancel:hover{background:#F5F5F5}
+.btn-save{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;padding:8px 22px;
+  border-radius:7px;border:none;background:var(--navy);color:#fff;cursor:pointer;transition:all .18s}
+.btn-save:hover{background:var(--gold);color:var(--navy)}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:22px;right:22px;background:var(--navy);color:var(--gold2);
+  font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;padding:10px 20px;
+  border-radius:9px;box-shadow:0 4px 20px rgba(0,0,0,.3);opacity:0;
+  transform:translateY(10px);transition:all .3s;z-index:999;pointer-events:none}
+.toast.show{opacity:1;transform:none}
+
+.dimmed{opacity:.1;pointer-events:none;transition:opacity .2s}
+</style>
+</head>
+<body>
+
+<!-- Loading bar -->
+<div class="loading-bar" id="loadingBar"></div>
+
+<!-- PIN Modal -->
+<div class="pin-overlay" id="pinOverlay">
+  <div class="pin-box">
+    <div class="pin-title">Mode édition</div>
+    <div class="pin-sub">Entrez le code PIN pour modifier le planning</div>
+    <input class="pin-input" id="pinInput" type="password" maxlength="4"
+           placeholder="····" oninput="onPinInput()" onkeydown="if(event.key==='Enter')checkPin()">
+    <div class="pin-error" id="pinError"></div>
+    <button class="pin-btn" onclick="checkPin()">Accéder</button>
+    <button class="pin-cancel" onclick="closePinModal()">Annuler</button>
+  </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="edit-overlay" id="editOverlay">
+  <div class="edit-modal">
+    <div class="em-hd">
+      <div>
+        <div class="em-title" id="emTitle">Modifier</div>
+        <div class="em-sub" id="emSub"></div>
+      </div>
+      <button class="em-close" onclick="closeEdit()">✕</button>
+    </div>
+    <div class="em-scope" id="emScope" style="display:none">
+      <span class="em-scope-label">Appliquer à :</span>
+      <button class="scope-btn active" id="scopeSite" onclick="setScope('site')">Site entier</button>
+      <button class="scope-btn" id="scopePerson" onclick="setScope('person')">Cette personne uniquement</button>
+    </div>
+    <div class="task-rows" id="taskRows"></div>
+    <button class="add-task-btn" onclick="addRow()">+ Ajouter une tâche</button>
+    <div class="em-actions">
+      <button class="btn-cancel" onclick="closeEdit()">Annuler</button>
+      <button class="btn-save" onclick="saveEdit()">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Top bar -->
+<div class="topbar">
+  <div class="tb-left">
+    <div class="tb-logo">Chabé</div>
+    <div class="tb-title">G7 Évian 2026 · Planning coordination · 5–19 juin</div>
+  </div>
+  <div class="tb-right">
+    <span class="sync-badge" id="syncBadge">⟳ chargement</span>
+    <div class="view-toggle">
+      <button class="view-btn active" onclick="setView('gantt')">Gantt</button>
+      <button class="view-btn" onclick="setView('list')">Par personne</button>
+    </div>
+    <span class="edit-indicator" id="editIndicator">✎ édition active</span>
+    <button class="edit-btn" id="editBtn" onclick="handleEditBtn()">✎ Éditer</button>
+  </div>
+</div>
+
+<!-- Filter bar -->
+<div class="filter-bar">
+  <span class="filter-label">Voir</span>
+  <button class="pf-btn active" data-p="all" onclick="filter('all')">Tous</button>
+  <button class="pf-btn" data-p="clara"   onclick="filter('clara')"   style="--ac:var(--c-clara)">Clara · JD</button>
+  <button class="pf-btn" data-p="pierre"  onclick="filter('pierre')"  style="--ac:var(--c-pierre)">Pierre</button>
+  <button class="pf-btn" data-p="william" onclick="filter('william')" style="--ac:var(--c-william)">William</button>
+  <button class="pf-btn" data-p="pauline" onclick="filter('pauline')" style="--ac:var(--c-pauline)">Pauline</button>
+  <button class="pf-btn" data-p="eric"    onclick="filter('eric')"    style="--ac:var(--c-eric)">Eric</button>
+  <button class="pf-btn" data-p="nordine" onclick="filter('nordine')" style="--ac:var(--c-nordine)">Nordine</button>
+  <button class="pf-btn" data-p="riles"   onclick="filter('riles')"   style="--ac:var(--c-riles)">Riles</button>
+  <button class="pf-btn" data-p="general" onclick="filter('general')" style="--ac:var(--c-general)">Général</button>
+</div>
+
+<main>
+  <div id="view-gantt"></div>
+  <div id="view-list" style="display:none"></div>
+</main>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// CONFIG — À REMPLIR après création Google Sheet
+// ═══════════════════════════════════════════════════════
+const SHEET_ID   = '1lqLVuHWNXk6bgdIASOyFRA4nKyKKrCtfE_BRU0El9Aw';      
+const SHEET_NAME = 'Planning';                  // nom de l'onglet
+const APPS_SCRIPT_URL_CONFIG = 'https://script.google.com/macros/s/AKfycbwgbArTbsl6rYKyE0_7cGaOKyfRUZ0bC3ko_q_ZDJOhC0By5RHz8GyM_LTFGbGIb1leaw/exec';             // ← coller l'URL Apps Script ici après déploiement
+const PIN        = '2606';                      // ← code PIN (date G7 !)
+
+// ═══════════════════════════════════════════════════════
+// STATIC DATA
+// ═══════════════════════════════════════════════════════
+const DAYS = [
+  {id:0,  date:'5 juin',  dow:'Lun', phase:'transit', label:'Pré-déploiement'},
+  {id:1,  date:'6 juin',  dow:'Mar', phase:'transit', label:'Pré-déploiement'},
+  {id:2,  date:'7 juin',  dow:'Mer', phase:'transit', label:'Pré-déploiement'},
+  {id:3,  date:'8 juin',  dow:'Jeu', phase:'install', label:'Installation'},
+  {id:4,  date:'9 juin',  dow:'Ven', phase:'install', label:'Installation'},
+  {id:5,  date:'10 juin', dow:'Sam', phase:'install', label:'Installation'},
+  {id:6,  date:'11 juin', dow:'Dim', phase:'ops',     label:'Opérationnel'},
+  {id:7,  date:'12 juin', dow:'Lun', phase:'ops',     label:'Opérationnel'},
+  {id:8,  date:'13 juin', dow:'Mar', phase:'ops',     label:'Opérationnel'},
+  {id:9,  date:'14 juin', dow:'Mer', phase:'veille',  label:'Veille G7'},
+  {id:10, date:'15 juin', dow:'Jeu', phase:'g7',      label:'★ Sommet G7 J1'},
+  {id:11, date:'16 juin', dow:'Ven', phase:'g7',      label:'★ Sommet G7 J2'},
+  {id:12, date:'17 juin', dow:'Sam', phase:'g7',      label:'★ Sommet G7 J3'},
+  {id:13, date:'18 juin', dow:'Dim', phase:'debrief', label:'Démobilisation'},
+  {id:14, date:'19 juin', dow:'Lun', phase:'debrief', label:'Clôture'},
+];
+
+// Site → persons mapping (for propagation)
+const SITE_PERSONS = {
+  hilton:  ['pierre','william'],
+  odalys:  ['pauline','eric'],
+  japon:   ['nordine','riles'],
+  general: ['general'],
+};
+
+const PERSONS = {
+  clara:   {name:'Clara · JD', role:'Direction',       color:'var(--c-clara)',   bg:'var(--c-clara-bg)',   dk:'var(--c-clara-dk)'},
+  pierre:  {name:'Pierre',     role:'Hilton',           color:'var(--c-pierre)',  bg:'var(--c-pierre-bg)',  dk:'var(--c-pierre-dk)'},
+  william: {name:'William',    role:'Hilton',           color:'var(--c-william)', bg:'var(--c-william-bg)', dk:'var(--c-william-dk)'},
+  pauline: {name:'Pauline',    role:'Odalys',           color:'var(--c-pauline)', bg:'var(--c-pauline-bg)', dk:'var(--c-pauline-dk)'},
+  eric:    {name:'Eric',       role:'Odalys',           color:'var(--c-eric)',    bg:'var(--c-eric-bg)',    dk:'var(--c-eric-dk)'},
+  nordine: {name:'Nordine',    role:'Amb. Japon',       color:'var(--c-nordine)', bg:'var(--c-nordine-bg)', dk:'var(--c-nordine-dk)'},
+  riles:   {name:'Riles',      role:'Amb. Japon/Hilton',color:'var(--c-riles)',   bg:'var(--c-riles-bg)',   dk:'var(--c-riles-dk)'},
+  general: {name:'Général / Chauffeurs', role:'Toute l\'équipe', color:'var(--c-general)', bg:'var(--c-general-bg)', dk:'var(--c-general-dk)'},
+};
+
+const GANTT_ROWS = [
+  {id:'clara',   label:'Direction',  members:'Clara · JD',       persons:['clara'],   color:'var(--c-clara)',   bg:'var(--c-clara-bg)',   dk:'var(--c-clara-dk)'},
+  {id:'hilton',  label:'Hilton',     members:'Pierre · William',  persons:['pierre','william'], color:'var(--c-hilton)',  bg:'var(--c-hilton-bg)',  dk:'var(--c-hilton-dk)'},
+  {id:'odalys',  label:'Odalys',     members:'Pauline · Eric',    persons:['pauline','eric'],   color:'var(--c-odalys)',  bg:'var(--c-odalys-bg)',  dk:'var(--c-odalys-dk)'},
+  {id:'japon',   label:'Amb. Japon', members:'Nordine · Riles',   persons:['nordine','riles'],  color:'var(--c-japon)',   bg:'var(--c-japon-bg)',   dk:'var(--c-japon-dk)'},
+  {id:'general', label:'Général',    members:'Toute l\'équipe',   persons:['general'],          color:'var(--c-general)', bg:'var(--c-general-bg)', dk:'var(--c-general-dk)'},
+];
+
+// ═══════════════════════════════════════════════════════
+// DEFAULT TASKS (fallback si Sheet non connectée)
+// ═══════════════════════════════════════════════════════
+// Format: { "site|person__dateIndex": [{h:"heure", t:"texte"}, ...] }
+const DEFAULT_TASKS = {
+  "clara__0":[{h:"11h30",t:"Rencontre traiteur"},{h:"14h00",t:"Visite parking Hilton — installation poste de travail"}],
+  "clara__1":[{h:"10h00",t:"Visite Odalys — installation lieu de travail + salle briefing"},{h:"11h00",t:"Définir sites de livraison repas (Ermitage / Hilton / Odalys...)"}],
+  "clara__3":[{h:"16h00",t:"Briefing équipe + dispatch matériel"},{h:"18h00",t:"Installation postes de travail"}],
+  "clara__4":[{h:"10h00",t:"Déchargement Super U, Publier"},{h:"11h30",t:"▶ Arrivée chauffeurs ×20 — gare Genève"},{h:"13h00",t:"Bus Genève → Évian"}],
+
+  "hilton__3":[{h:"matin",t:"Pierre + William : arrivée"},{h:"",t:"Vérification parking Hilton"},{h:"16h00",t:"Briefing équipe"},{h:"18h00",t:"Installation poste Hilton"}],
+  "hilton__4":[{h:"7h00",t:"Mise en place Hilton"},{h:"11h30",t:"Accueil 20 chauffeurs — gare Genève (Pierre + Riles)"},{h:"12h00",t:"Bus Genève → Évian"},{h:"13h00",t:"Déchargement Super U, Publier"},{h:"13h–14h",t:"Répartition véhicules → parking Hilton"},{h:"soir",t:"Réception véhicules · Fiches état départ"}],
+  "hilton__5":[{h:"7h00",t:"Mise en place Hilton"}],
+  "hilton__6":[{h:"7h00",t:"Mise en place Hilton"},{h:"",t:"Briefing chauffeurs Hilton"},{h:"midi",t:"Plateaux repas — mairie Évian"}],
+  "hilton__7":[{h:"7h00",t:"Mise en place Hilton"},{h:"midi",t:"Plateaux repas — mairie Évian"}],
+  "hilton__8":[{h:"7h00",t:"Mise en place Hilton"},{h:"midi",t:"Plateaux repas — mairie Évian"}],
+  "hilton__9":[{h:"7h00",t:"Mise en place Hilton"},{h:"midi",t:"Plateaux repas — mairie Évian"},{h:"",t:"Vérif. chauffeurs DZ, Resort pour J15"}],
+  "hilton__10":[{h:"7h00",t:"Mise en place Hilton"},{h:"midi",t:"Plateaux repas — mairie Évian"},{h:"",t:"Coordination véhicule blindé Modern Car"},{h:"",t:"Cortèges + délégations VIP"}],
+  "hilton__11":[{h:"7h00",t:"Mise en place Hilton"},{h:"midi",t:"Plateaux repas — mairie Évian"},{h:"",t:"Gestion cortèges J2 G7"}],
+  "hilton__12":[{h:"7h00",t:"Mise en place Hilton"},{h:"midi",t:"Plateaux repas — mairie Évian"},{h:"",t:"Cortèges J3 + départs délégations"}],
+  "hilton__13":[{h:"7h00",t:"Mise en place Hilton"},{h:"",t:"Contrôle retour véhicules Hilton"},{h:"",t:"Check-out chauffeurs booking Évian"},{h:"",t:"Récupération matériel logistique"}],
+
+  "pierre__4":[{h:"7h00",t:"Mise en place Hilton"},{h:"11h30",t:"Accueil 20 chauffeurs — gare Genève (avec Riles)"},{h:"12h00",t:"Bus Genève → Évian"},{h:"13h00",t:"Déchargement Super U, Publier"},{h:"13h–14h",t:"Répartition véhicules → parking Hilton"}],
+
+  "odalys__3":[{h:"après-midi",t:"Eric + Pauline : arrivée"},{h:"",t:"Vérification parking Odalys"},{h:"16h00",t:"Briefing équipe"},{h:"18h00",t:"Installation poste Odalys"}],
+  "odalys__4":[{h:"9h00",t:"Vérification chambres chauffeurs ×10"},{h:"13h00",t:"Accueil 10 chauffeurs · Remise clés chambres"},{h:"15h00",t:"Montage portes drapeaux (Rafales)"},{h:"soir",t:"Sortie repas (2 véhicules mis à dispo)"}],
+  "odalys__5":[{h:"7h00",t:"Mise en place Odalys"},{h:"9h00",t:"Vérification chambres chauffeurs ×24"},{h:"13h00",t:"Accueil vague 1 · Logements + paniers PDJ"},{h:"15h00",t:"Accueil vague 2 · Logements + paniers PDJ"}],
+  "odalys__6":[{h:"7h00",t:"Mise en place Odalys"},{h:"",t:"Briefing chauffeurs Odalys + accréditations"},{h:"10h00",t:"Montage portes drapeaux (Blindés)"}],
+  "odalys__7":[{h:"7h00",t:"Mise en place Odalys"},{h:"midi",t:"Plateaux repas à réceptionner"}],
+  "odalys__8":[{h:"7h00",t:"Mise en place Odalys"},{h:"midi",t:"Plateaux repas à réceptionner"}],
+  "odalys__9":[{h:"7h00",t:"Mise en place Odalys"},{h:"",t:"Cortèges + délégations VIP"},{h:"midi",t:"Plateaux repas à réceptionner"}],
+  "odalys__10":[{h:"7h00",t:"Mise en place Odalys"},{h:"midi",t:"Plateaux repas — mairie Évian"},{h:"",t:"Support missions Sherpas + délégations"}],
+  "odalys__11":[{h:"7h00",t:"Mise en place Odalys"},{h:"midi",t:"Plateaux repas — mairie Évian"},{h:"",t:"Support missions chauffeurs"}],
+  "odalys__12":[{h:"7h00",t:"Mise en place Odalys"},{h:"midi",t:"Plateaux repas — mairie Évian"},{h:"",t:"Préparation retour véhicules + chauffeurs"}],
+  "odalys__13":[{h:"7h00",t:"Mise en place Odalys"},{h:"",t:"Contrôle retour véhicules Odalys"},{h:"",t:"Libération chambres · Récupération cartes TOTAL + badges"}],
+
+  "japon__3":[{h:"après-midi",t:"Riles : arrivée"},{h:"16h00",t:"Briefing équipe"}],
+  "japon__4":[{h:"matin",t:"Riles : Briefing missions ambassade Japon"}],
+  "japon__5":[{h:"~13h",t:"Nordine : arrivée avec vague 1"},{h:"",t:"Jonction Nordine + Riles · Briefing ambassade Japon"}],
+  "japon__6":[{h:"matin",t:"Briefing ambassade Japon"},{h:"",t:"Suivi missions ambassade Japon"}],
+  "japon__7":[{h:"",t:"Suivi missions ambassade Japon"}],
+  "japon__8":[{h:"",t:"Suivi missions ambassade Japon"}],
+  "japon__9":[{h:"",t:"Suivi missions ambassade Japon"},{h:"",t:"Préparation missions J15–J17"}],
+  "japon__10":[{h:"",t:"Missions J1 G7 · Coordination délégation japonaise"}],
+  "japon__11":[{h:"",t:"Missions J2 G7"}],
+  "japon__12":[{h:"",t:"Missions J3 G7 (clôture)"}],
+  "japon__13":[{h:"",t:"Clôture missions · Démobilisation"}],
+
+  "general__2":[{h:"",t:"Veille arrivée équipes — vérification réservations & logistique"}],
+  "general__3":[{h:"",t:"Déchargement & acheminement véhicules (J8→J10)"}],
+  "general__4":[{h:"11h30",t:"▶ Arrivée vague unique ×20 — gare Genève"},{h:"12h00",t:"Bus Genève → Évian"},{h:"13h00",t:"Déchargement Super U, Publier"},{h:"",t:"10 chauffeurs → Odalys · 10 → Hôtel Continental"},{h:"soir",t:"Dîner : Odalys (véhicule) · Continental (à pied)"}],
+  "general__5":[{h:"11h30",t:"▶ Vague 1 ×45 — gare Genève → Évian ~13h"},{h:"12h00",t:"Récupération plateaux repas"},{h:"13h30",t:"▶ Vague 2 ×45 — gare Genève → Évian ~15h"},{h:"",t:"Distribution logements + paniers PDJ"},{h:"",t:"Chauffeurs Odalys → missions Sherpas dès arrivée"}],
+  "general__6":[{h:"7h00",t:"Mise en place — deux points Odalys + Hilton"},{h:"8h30",t:"BRIEFING GÉNÉRAL + remise accréditations"},{h:"midi",t:"Plateaux repas — mairie Évian"},{h:"",t:"Reconnaissance terrain (équipe TBC)"}],
+  "general__7":[{h:"7h00",t:"Mise en place — Odalys + Hilton"},{h:"midi",t:"Plateaux repas — mairie Évian"},{h:"",t:"Reconnaissance terrain (équipe TBC)"}],
+  "general__8":[{h:"7h00",t:"Mise en place — Odalys + Hilton"},{h:"midi",t:"Plateaux repas — mairie Évian"},{h:"",t:"Répétition (équipe TBC)"}],
+  "general__9":[{h:"7h00",t:"Mise en place — Odalys + Hilton"},{h:"midi",t:"Plateaux repas — mairie Évian"},{h:"",t:"Prépa protocole G7 — véhicules, accès, accréditations"}],
+  "general__10":[{h:"7h00",t:"Mise en place — Odalys + Hilton"},{h:"midi",t:"Plateaux repas — mairie Évian"},{h:"",t:"TOUS AUX POSTES — Protocole G7 J1"},{h:"",t:"Missions Sherpas J1 — aéroport + déplacements Évian"}],
+  "general__11":[{h:"7h00",t:"Mise en place — Odalys + Hilton"},{h:"midi",t:"Plateaux repas — mairie Évian"},{h:"",t:"TOUS AUX POSTES — Protocole G7 J2"},{h:"",t:"Missions Sherpas J2"}],
+  "general__12":[{h:"7h00",t:"Mise en place — Odalys + Hilton"},{h:"midi",t:"Plateaux repas — mairie Évian"},{h:"",t:"TOUS AUX POSTES — Protocole G7 J3"},{h:"soir",t:"Clôture sommet — amorce démobilisation"},{h:"",t:"Missions Sherpas J3 (clôture)"}],
+  "general__13":[{h:"",t:"Récupération cartes TOTAL + accréditations"},{h:"",t:"Restitution véhicules · Fiches état retour"},{h:"",t:"Remise badges · Départ progressif chauffeurs"}],
+  "general__14":[{h:"",t:"Bilan terrain + remontées incidents"},{h:"",t:"Retour coordinateurs"},{h:"",t:"Rapport fin de mission → Chabé HQ"}],
+};
+
+// ═══════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════
+let allTasks = {};      // merged: default + sheet overrides
+let editMode = false;
+let currentFilter = 'all';
+let currentView = 'gantt';
+let editCtx = null;     // {type:'site'|'person', id, dayId}
+let editItems = [];
+let editScope = 'site'; // 'site' | 'person'
+let sheetConnected = false;
+
+// ═══════════════════════════════════════════════════════
+// GOOGLE SHEETS INTEGRATION
+// ═══════════════════════════════════════════════════════
+async function loadFromSheet() {
+  if (SHEET_ID === 'VOTRE_SHEET_ID_ICI') {
+    allTasks = JSON.parse(JSON.stringify(DEFAULT_TASKS));
+    setSyncBadge('local', '● local uniquement');
+    render();
+    return;
+  }
+
+  setSyncBadge('loading', '⟳ chargement...');
+  setLoading(true);
+
+  try {
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
+    const res = await fetch(url);
+    const text = await res.text();
+    // Google wraps in google.visualization.Query.setResponse(...)
+    const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/)[1]);
+    const rows = json.table.rows;
+
+    // Reset to defaults then apply sheet overrides
+    allTasks = JSON.parse(JSON.stringify(DEFAULT_TASKS));
+
+    rows.forEach(row => {
+      const cells = row.c;
+      if (!cells || !cells[0]) return;
+      const target = (cells[0]?.v || '').toString().trim().toLowerCase(); // site or person id
+      const dateStr = (cells[1]?.v || '').toString().trim();              // ex: "9 juin"
+      const heure   = (cells[2]?.v || '').toString().trim();
+      const texte   = (cells[3]?.v || '').toString().trim();
+      if (!target || !dateStr || !texte) return;
+
+      const day = DAYS.find(d => d.date === dateStr);
+      if (!day) return;
+
+      const key = `${target}__${day.id}`;
+      if (!allTasks[key]) allTasks[key] = [];
+      // Check if task already exists to avoid duplicates
+      if (!allTasks[key].find(t => t.t === texte)) {
+        allTasks[key].push({h: heure, t: texte});
+      }
+    });
+
+    sheetConnected = true;
+    setSyncBadge('ok', '● synchro Google Sheets');
+  } catch(e) {
+    console.warn('Sheet load error:', e);
+    allTasks = JSON.parse(JSON.stringify(DEFAULT_TASKS));
+    setSyncBadge('err', '⚠ hors ligne — données locales');
+  }
+
+  setLoading(false);
+  render();
+}
+
+async function pushToSheet(target, dateStr, items) {
+  // APPS_SCRIPT_URL : à remplir après déploiement du script Google
+  const APPS_SCRIPT_URL = window.APPS_SCRIPT_URL || '';
+
+  if (!APPS_SCRIPT_URL) {
+    showToast('⚠ Apps Script non configuré — voir instructions');
+    return;
+  }
+
+  setSyncBadge('loading', '⟳ sauvegarde...');
+  try {
+    // no-cors : on ne peut pas lire la réponse mais l'écriture fonctionne
+    await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      mode:   'no-cors',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        action:    'upsert',
+        target:    target,
+        date:      dateStr,
+        items:     items,
+        sheetName: SHEET_NAME
+      })
+    });
+    setSyncBadge('ok', '● synchro Google Sheets');
+    showToast('✓ Sauvegardé dans Google Sheets');
+  } catch(e) {
+    setSyncBadge('err', '⚠ erreur de sauvegarde');
+    showToast('⚠ Erreur réseau — réessayez');
+    console.error(e);
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// TASK RESOLUTION
+// ═══════════════════════════════════════════════════════
+function getTasks(id, dayId) {
+  // Person-specific override takes priority over site
+  const personKey = `${id}__${dayId}`;
+  if (allTasks[personKey]) return allTasks[personKey];
+
+  // Find which site this person belongs to
+  for (const [site, persons] of Object.entries(SITE_PERSONS)) {
+    if (persons.includes(id)) {
+      const siteKey = `${site}__${dayId}`;
+      if (allTasks[siteKey]) return allTasks[siteKey];
+    }
+  }
+  return [];
+}
+
+function getSiteTasks(siteId, dayId) {
+  return allTasks[`${siteId}__${dayId}`] || [];
+}
+
+// ═══════════════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════════════
+function render() {
+  renderGantt();
+  renderList();
+  applyFilter(currentFilter);
+}
+
+function renderGantt() {
+  const el = document.getElementById('view-gantt');
+  el.innerHTML = '';
+  const wrap = document.createElement('div');
+  wrap.className = 'gantt-wrap';
+  const table = document.createElement('table');
+  table.className = 'gantt-table';
+
+  // Head
+  const thead = document.createElement('thead');
+  const tr = document.createElement('tr');
+  const th0 = document.createElement('th');
+  th0.className = 'lbl-col';
+  th0.textContent = 'G7 ÉVIAN 2026';
+  tr.appendChild(th0);
+  DAYS.forEach(d => {
+    const th = document.createElement('th');
+    th.className = `day-col ph-${d.phase}`;
+    th.innerHTML = `<strong>${d.dow} ${d.date}</strong><span class="ph-label">${d.label}</span>`;
+    tr.appendChild(th);
+  });
+  thead.appendChild(tr);
+  table.appendChild(thead);
+
+  // Body
+  const tbody = document.createElement('tbody');
+  GANTT_ROWS.forEach(row => {
+    const tr = document.createElement('tr');
+    tr.dataset.persons = row.persons.join(',');
+    tr.classList.add('grow');
+
+    const tdL = document.createElement('td');
+    tdL.className = 'lbl-cell';
+    tdL.style.cssText = `background:${row.color};border-right:3px solid rgba(0,0,0,.15)`;
+    tdL.innerHTML = `<div class="lbl-inner"><div class="lbl-name">${row.label}</div><div class="lbl-members">${row.members}</div></div>`;
+    tr.appendChild(tdL);
+
+    DAYS.forEach(d => {
+      const td = document.createElement('td');
+      const isG7 = d.phase === 'g7';
+      td.className = `task-cell ph-${d.phase}`;
+      td.style.background = isG7 ? '#0f2540' : row.bg;
+      td.dataset.site = row.id;
+      td.dataset.day = d.id;
+
+      const items = getSiteTasks(row.id, d.id);
+      if (!items.length) { td.classList.add('empty'); }
+      else {
+        items.forEach(item => {
+          const div = document.createElement('div');
+          div.className = 'ti';
+          if (item.h) {
+            const s = document.createElement('span');
+            s.className = 'tt';
+            s.style.cssText = `background:${row.color}25;color:${isG7?'#FFD080':row.color}`;
+            s.textContent = item.h;
+            div.appendChild(s);
+          } else {
+            const b = document.createElement('span');
+            b.className = 'tbullet';
+            b.style.color = isG7 ? 'var(--gold)' : row.color;
+            b.textContent = '▸';
+            div.appendChild(b);
+          }
+          const t = document.createElement('span');
+          t.className = 'tx';
+          t.style.color = isG7 ? '#C8DCF0' : row.dk;
+          t.textContent = item.t;
+          div.appendChild(t);
+          td.appendChild(div);
+        });
+      }
+
+      if (editMode) {
+        td.classList.add('editable');
+        td.addEventListener('click', () => openEdit('site', row.id, d.id));
+      }
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  });
+  table.appendChild(tbody);
+  wrap.appendChild(table);
+  el.appendChild(wrap);
+}
+
+function renderList() {
+  const el = document.getElementById('view-list');
+  el.innerHTML = '<div class="list-grid" id="listGrid"></div>';
+  const grid = document.getElementById('listGrid');
+
+  Object.entries(PERSONS).forEach(([pid, p]) => {
+    const card = document.createElement('div');
+    card.className = 'pcard';
+    card.dataset.person = pid;
+
+    card.innerHTML = `<div class="pcard-hd" style="background:${p.bg}">
+      <div class="pavatar" style="background:${p.color}">${p.name[0]}</div>
+      <div>
+        <div class="pcard-name" style="color:${p.dk}">${p.name}</div>
+        <div class="pcard-role" style="color:${p.dk}">${p.role}</div>
+      </div>
+    </div><div class="pdays" id="pdays-${pid}"></div>`;
+    grid.appendChild(card);
+
+    renderPersonDays(pid);
+  });
+}
+
+function renderPersonDays(pid) {
+  const el = document.getElementById(`pdays-${pid}`);
+  if (!el) return;
+  const p = PERSONS[pid];
+  el.innerHTML = '';
+
+  DAYS.forEach(d => {
+    const items = getTasks(pid, d.id);
+    const has = items.length > 0;
+
+    const row = document.createElement('div');
+    row.className = `pday-row ph-${d.phase}${editMode ? ' editable' : ''}`;
+    row.dataset.person = pid;
+    row.dataset.day = d.id;
+    row.style.opacity = has ? '' : '0.3';
+
+    const badge = `<div class="dbadge">
+      <div class="dbadge-date">${d.date}</div>
+      <div class="dbadge-dow">${d.dow}</div>
+    </div>`;
+
+    const tasksEl = document.createElement('div');
+    tasksEl.className = 'pday-tasks';
+    if (has) {
+      tasksEl.innerHTML = items.map(item => `
+        <div class="pday-ti">
+          ${item.h ? `<span class="pday-th" style="color:${p.color}">${item.h}</span>` : `<span style="color:${p.color};font-size:11px;flex-shrink:0">▸</span>`}
+          <span>${item.t}</span>
+        </div>`).join('');
+    } else {
+      tasksEl.innerHTML = '<span class="notask">Aucune tâche</span>';
+    }
+
+    row.innerHTML = badge;
+    row.appendChild(tasksEl);
+
+    if (editMode) {
+      tasksEl.style.cursor = 'pointer';
+      tasksEl.addEventListener('click', () => openEdit('person', pid, d.id));
+    }
+    el.appendChild(row);
+  });
+}
+
+// ═══════════════════════════════════════════════════════
+// FILTER
+// ═══════════════════════════════════════════════════════
+function filter(pid) {
+  currentFilter = pid;
+  document.querySelectorAll('.pf-btn').forEach(b => {
+    const isActive = b.dataset.p === pid;
+    b.classList.toggle('active', isActive);
+    if (isActive && pid !== 'all') {
+      b.style.background = `var(--c-${pid})`;
+      b.style.borderColor = `var(--c-${pid})`;
+    } else if (!isActive) {
+      b.style.background = '';
+      b.style.borderColor = '';
+    }
+  });
+  applyFilter(pid);
+}
+
+function applyFilter(pid) {
+  document.querySelectorAll('.grow').forEach(row => {
+    const persons = row.dataset.persons?.split(',') || [];
+    row.classList.toggle('dimmed', pid !== 'all' && !persons.includes(pid));
+  });
+  document.querySelectorAll('.pcard').forEach(card => {
+    const match = pid === 'all' || card.dataset.person === pid;
+    card.style.display = match ? '' : 'none';
+  });
+}
+
+// ═══════════════════════════════════════════════════════
+// PIN
+// ═══════════════════════════════════════════════════════
+function handleEditBtn() {
+  if (editMode) { toggleEditMode(false); return; }
+  document.getElementById('pinOverlay').classList.add('open');
+  document.getElementById('pinInput').value = '';
+  document.getElementById('pinError').textContent = '';
+  setTimeout(() => document.getElementById('pinInput').focus(), 100);
+}
+function closePinModal() { document.getElementById('pinOverlay').classList.remove('open'); }
+function onPinInput() {
+  document.getElementById('pinError').textContent = '';
+  if (document.getElementById('pinInput').value.length === 4) checkPin();
+}
+function checkPin() {
+  const val = document.getElementById('pinInput').value;
+  if (val === PIN) {
+    closePinModal();
+    toggleEditMode(true);
+  } else {
+    document.getElementById('pinError').textContent = 'Code incorrect';
+    document.getElementById('pinInput').value = '';
+    document.getElementById('pinInput').focus();
+  }
+}
+function toggleEditMode(on) {
+  editMode = on;
+  const btn = document.getElementById('editBtn');
+  const ind = document.getElementById('editIndicator');
+  btn.textContent = on ? '✎ Quitter édition' : '✎ Éditer';
+  btn.classList.toggle('on', on);
+  ind.classList.toggle('visible', on);
+  render();
+}
+
+// ═══════════════════════════════════════════════════════
+// EDIT MODAL
+// ═══════════════════════════════════════════════════════
+function openEdit(type, id, dayId) {
+  editCtx = {type, id, dayId};
+  editScope = type === 'site' ? 'site' : 'person';
+
+  const day = DAYS[dayId];
+  const isSite = type === 'site';
+
+  if (isSite) {
+    const row = GANTT_ROWS.find(r => r.id === id);
+    document.getElementById('emTitle').textContent = `${row.label} — ${day.date}`;
+    document.getElementById('emSub').textContent = `${day.label}  ·  ${row.members}`;
+    editItems = JSON.parse(JSON.stringify(getSiteTasks(id, dayId)));
+    document.getElementById('emScope').style.display = 'none';
+  } else {
+    const p = PERSONS[id];
+    document.getElementById('emTitle').textContent = `${p.name} — ${day.date}`;
+    document.getElementById('emSub').textContent = `${day.label}  ·  ${p.role}`;
+    editItems = JSON.parse(JSON.stringify(getTasks(id, dayId)));
+    // Show scope selector if person belongs to a site
+    const hasSite = Object.entries(SITE_PERSONS).some(([s,ps]) => ps.includes(id));
+    document.getElementById('emScope').style.display = hasSite ? 'flex' : 'none';
+    setScope('person');
+  }
+
+  renderEditRows();
+  document.getElementById('editOverlay').classList.add('open');
+}
+
+function setScope(s) {
+  editScope = s;
+  document.getElementById('scopeSite').classList.toggle('active', s === 'site');
+  document.getElementById('scopePerson').classList.toggle('active', s === 'person');
+}
+
+function renderEditRows() {
+  const list = document.getElementById('taskRows');
+  list.innerHTML = '';
+  editItems.forEach((item, i) => {
+    const row = document.createElement('div');
+    row.className = 'task-row';
+    row.innerHTML = `
+      <input class="inp-time" type="text" placeholder="heure" value="${item.h||''}"
+             oninput="editItems[${i}].h=this.value">
+      <input class="inp-text" type="text" placeholder="Description de la tâche..." value="${item.t||''}"
+             oninput="editItems[${i}].t=this.value">
+      <button class="del-btn" onclick="delRow(${i})">×</button>`;
+    list.appendChild(row);
+  });
+}
+
+function addRow() {
+  editItems.push({h:'',t:''});
+  renderEditRows();
+  const inputs = document.querySelectorAll('.inp-text');
+  inputs[inputs.length-1]?.focus();
+}
+
+function delRow(i) {
+  editItems.splice(i,1);
+  renderEditRows();
+}
+
+function closeEdit() {
+  document.getElementById('editOverlay').classList.remove('open');
+  editCtx = null; editItems = [];
+}
+
+function saveEdit() {
+  const cleaned = editItems.filter(it => it.t.trim());
+  const {type, id, dayId} = editCtx;
+  const day = DAYS[dayId];
+
+  if (type === 'site') {
+    // Apply to site key
+    allTasks[`${id}__${dayId}`] = cleaned;
+    // Propagate to persons of this site (unless they have a personal override)
+    const persons = SITE_PERSONS[id] || [];
+    persons.forEach(pid => {
+      // Only propagate if no personal override exists
+      if (!allTasks[`${pid}__${dayId}`]) {
+        // Refresh will pull from site key automatically
+      }
+    });
+    pushToSheet(id, day.date, cleaned);
+  } else {
+    if (editScope === 'site') {
+      // Find site for this person and save as site
+      const siteEntry = Object.entries(SITE_PERSONS).find(([s,ps]) => ps.includes(id));
+      if (siteEntry) {
+        const siteId = siteEntry[0];
+        allTasks[`${siteId}__${dayId}`] = cleaned;
+        // Clear person override if any
+        delete allTasks[`${id}__${dayId}`];
+        pushToSheet(siteId, day.date, cleaned);
+      }
+    } else {
+      // Personal override
+      allTasks[`${id}__${dayId}`] = cleaned;
+      pushToSheet(id, day.date, cleaned);
+    }
+  }
+
+  closeEdit();
+  render();
+  // Reload from sheet after short delay to confirm sync
+  if (window.APPS_SCRIPT_URL) {
+    setTimeout(() => loadFromSheet(), 2200);
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// VIEW SWITCH
+// ═══════════════════════════════════════════════════════
+function setView(v) {
+  currentView = v;
+  document.getElementById('view-gantt').style.display = v==='gantt'?'block':'none';
+  document.getElementById('view-list').style.display  = v==='list'?'block':'none';
+  document.querySelectorAll('.view-btn').forEach(b =>
+    b.classList.toggle('active', (v==='gantt'&&b.textContent==='Gantt')||(v==='list'&&b.textContent==='Par personne')));
+}
+
+// ═══════════════════════════════════════════════════════
+// UI HELPERS
+// ═══════════════════════════════════════════════════════
+function setSyncBadge(state, text) {
+  const b = document.getElementById('syncBadge');
+  b.className = `sync-badge ${state}`;
+  b.textContent = text;
+}
+function setLoading(on) {
+  const b = document.getElementById('loadingBar');
+  b.classList.toggle('active', on);
+}
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// Keyboard shortcuts
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeEdit(); closePinModal(); }
+});
+document.getElementById('editOverlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('editOverlay')) closeEdit();
+});
+document.getElementById('pinOverlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('pinOverlay')) closePinModal();
+});
+
+// ── Init ──
+// Inject Apps Script URL from config constant
+window.APPS_SCRIPT_URL = APPS_SCRIPT_URL_CONFIG;
+loadFromSheet();
+</script>
+</body>
+</html>
